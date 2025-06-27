@@ -1,3 +1,3 @@
-module github.com/dHobbs17/rpgcmdutils
+module rpgcmdutils
 
 go 1.24
