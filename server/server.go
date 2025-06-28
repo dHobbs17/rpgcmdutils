@@ -5,6 +5,7 @@ import (
 	"net"
 )
 
+// Server Sends...
 const DISCONNECT_OPERATION string = "disconnect"
 const CONNECT_OPERATION string = "connect"
 const ACK_OPERATION string = "ack"
@@ -12,15 +13,32 @@ const INVALID_OPERATION string = "invalid"
 const TICK_OPERATION string = "tick"
 const QUEUE_OPERATION string = "queue"
 const ACTION_OPERATION string = "action"
+const NOTIFY_OPERATION string = "notify"
+const MESSAGE_OPERATION string = "message"
 
-const SERVER_HOST string = "localhost:666"
+const (
+	DISCONNECT serverCommands = iota
+	CONNECT
+	ACK
+	TICK
+	QUEUE
+	ACTION
+	NOTIFY
+	MESSAGE
+)
+
+// Server info
+const server_host string = "localhost"
+const server_port string = "666"
+const server_protocol string = "tcp"
+const server_name string = "Dave's cool server"
 
 type serverCommands int
 
 type ServerMessage struct {
-	Username string
-	Action   string
-	Data     string
+	Action string
+	Data   string
+	Args   []string
 }
 type InitializeConnection struct {
 	Action   string
@@ -34,6 +52,7 @@ type InitializeConnection struct {
 func (s ServerMessage) String() string {
 	return s.Action + ":" + s.Data
 }
+
 func (s InitializeConnection) String() string {
 	return s.Action + ":" + s.Data
 }
@@ -42,15 +61,6 @@ type ServerErr struct{ Err error }
 
 func (e ServerErr) Error() string { return e.Err.Error() }
 
-const (
-	DISCONNECT serverCommands = iota
-	CONNECT
-	ACK
-	TICK
-	QUEUE
-	ACTION
-)
-
 var ServerOperations = map[serverCommands]string{
 	DISCONNECT: DISCONNECT_OPERATION,
 	CONNECT:    CONNECT_OPERATION,
@@ -58,6 +68,8 @@ var ServerOperations = map[serverCommands]string{
 	TICK:       TICK_OPERATION,
 	QUEUE:      QUEUE_OPERATION,
 	ACTION:     ACTION_OPERATION,
+	NOTIFY:     NOTIFY_OPERATION,
+	MESSAGE:    MESSAGE_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -74,8 +86,21 @@ func (s serverCommands) String() string {
 		return ServerOperations[QUEUE]
 	case ACTION:
 		return ServerOperations[ACTION]
-
+	case NOTIFY:
+		return ServerOperations[NOTIFY]
 	default:
 		return INVALID_OPERATION
 	}
+}
+
+func GetServerUrl() string {
+	return server_host + ":" + server_port
+}
+
+func GetServerProtocol() string {
+	return server_protocol
+}
+
+func GetServername() string {
+	return server_name
 }
