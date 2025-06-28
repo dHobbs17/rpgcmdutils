@@ -34,9 +34,9 @@ func (s InitializeConnection) String() string {
 	return s.Action + ":" + s.Data
 }
 
-type ServerErr struct{ err error }
+type ServerErr struct{ Err error }
 
-func (e ServerErr) Error() string { return e.err.Error() }
+func (e ServerErr) Error() string { return e.Err.Error() }
 
 const (
 	DISCONNECT serverCommands = iota

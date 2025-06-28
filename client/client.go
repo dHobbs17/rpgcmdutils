@@ -7,9 +7,9 @@ const INVALID_OPERATION string = "invalid"
 
 type clientCommand int
 
-type ClientError struct{ err error }
+type ClientError struct{ Err error }
 
-func (e ClientError) Error() string { return e.err.Error() }
+func (e ClientError) Error() string { return e.Err.Error() }
 
 type ClientMessage struct {
 	Username string

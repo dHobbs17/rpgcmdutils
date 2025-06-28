@@ -19,9 +19,9 @@ type PlayerMessage struct {
 	Data   string
 }
 
-type PlayerError struct{ err error }
+type PlayerError struct{ Err error }
 
-func (e PlayerError) Error() string { return e.err.Error() }
+func (e PlayerError) Error() string { return e.Err.Error() }
 
 const (
 	MOVE PlayerCommands = iota // Move must be first
