@@ -9,6 +9,7 @@ const DISCONNECT_OPERATION string = "disconnect"
 const ACK_OPERATION string = "ack"
 const INVALID_OPERATION string = "invalid"
 const TICK_OPERATION string = "tick"
+const QUEUE_OPERATION string = "queue"
 
 const SERVER_HOST string = "localhost:666"
 
@@ -43,12 +44,14 @@ const (
 	DISCONNECT serverCommands = iota
 	ACK
 	TICK
+	QUEUE
 )
 
 var ServerOperations = map[serverCommands]string{
 	DISCONNECT: DISCONNECT_OPERATION,
 	ACK:        ACK_OPERATION,
 	TICK:       TICK_OPERATION,
+	QUEUE:      QUEUE_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -59,6 +62,9 @@ func (s serverCommands) String() string {
 		return ServerOperations[ACK]
 	case TICK:
 		return ServerOperations[TICK]
+	case QUEUE:
+		return ServerOperations[QUEUE]
+
 	default:
 		return INVALID_OPERATION
 	}
