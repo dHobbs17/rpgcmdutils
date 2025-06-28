@@ -10,6 +10,7 @@ const ACK_OPERATION string = "ack"
 const INVALID_OPERATION string = "invalid"
 const TICK_OPERATION string = "tick"
 const QUEUE_OPERATION string = "queue"
+const ACTION_OPERATION string = "action"
 
 const SERVER_HOST string = "localhost:666"
 
@@ -45,6 +46,7 @@ const (
 	ACK
 	TICK
 	QUEUE
+	ACTION
 )
 
 var ServerOperations = map[serverCommands]string{
@@ -52,6 +54,7 @@ var ServerOperations = map[serverCommands]string{
 	ACK:        ACK_OPERATION,
 	TICK:       TICK_OPERATION,
 	QUEUE:      QUEUE_OPERATION,
+	ACTION:     ACTION_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -64,6 +67,8 @@ func (s serverCommands) String() string {
 		return ServerOperations[TICK]
 	case QUEUE:
 		return ServerOperations[QUEUE]
+	case ACTION:
+		return ServerOperations[ACTION]
 
 	default:
 		return INVALID_OPERATION
