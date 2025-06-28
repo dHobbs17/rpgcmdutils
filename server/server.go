@@ -14,7 +14,9 @@ const TICK_OPERATION string = "tick"
 const QUEUE_OPERATION string = "queue"
 const ACTION_OPERATION string = "action"
 const NOTIFY_OPERATION string = "notify"
-const MESSAGE_OPERATION string = "message"
+const ALERT_OPERATION string = "alert"
+const EVENT_OPERATION string = "event"
+const CHAT_OPERATION string = "chat"
 
 const (
 	DISCONNECT serverCommands = iota
@@ -24,7 +26,9 @@ const (
 	QUEUE
 	ACTION
 	NOTIFY
-	MESSAGE
+	CHAT
+	ALERT
+	EVENT
 )
 
 // Server info
@@ -69,7 +73,9 @@ var ServerOperations = map[serverCommands]string{
 	QUEUE:      QUEUE_OPERATION,
 	ACTION:     ACTION_OPERATION,
 	NOTIFY:     NOTIFY_OPERATION,
-	MESSAGE:    MESSAGE_OPERATION,
+	CHAT:       CHAT_OPERATION,
+	ALERT:      ALERT_OPERATION,
+	EVENT:      EVENT_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -88,6 +94,12 @@ func (s serverCommands) String() string {
 		return ServerOperations[ACTION]
 	case NOTIFY:
 		return ServerOperations[NOTIFY]
+	case ALERT:
+		return ServerOperations[ALERT]
+	case EVENT:
+		return ServerOperations[EVENT]
+	case CHAT:
+		return ServerOperations[CHAT]
 	default:
 		return INVALID_OPERATION
 	}
