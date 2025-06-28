@@ -3,6 +3,7 @@ package client
 const HEARTBEAT_OPERATION string = "heartbeat"
 const CONNECT_OPERATION string = "connect"
 const DISCONNECT_OPERATION string = "disconnect"
+const WELCOME_OPERATION string = "welcome"
 const INVALID_OPERATION string = "invalid"
 
 type clientCommand int
@@ -24,12 +25,14 @@ const (
 	CONNECT clientCommand = iota
 	DISCONNECT
 	HEARTBEAT
+	WELCOME
 )
 
 var ServerOperations = map[clientCommand]string{
 	CONNECT:    CONNECT_OPERATION,
 	DISCONNECT: DISCONNECT_OPERATION,
 	HEARTBEAT:  HEARTBEAT_OPERATION,
+	WELCOME:    WELCOME_OPERATION,
 }
 
 func (s clientCommand) String() string {
@@ -40,6 +43,8 @@ func (s clientCommand) String() string {
 		return ServerOperations[DISCONNECT]
 	case HEARTBEAT:
 		return ServerOperations[HEARTBEAT]
+	case WELCOME:
+		return ServerOperations[WELCOME]
 	default:
 		return INVALID_OPERATION
 	}
