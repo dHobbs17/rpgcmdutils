@@ -85,19 +85,10 @@ func GetPlayerOperations() []string {
 func ValidatePlayerOperation(operation string) (PlayerMessage, PlayerError) {
 	log.Println("Received player message: "+operation, len(operation))
 
-	// TODO fix bug with say so it allows spaces
-	var command, data string
-	if strings.Contains(operation, " ") {
-		command = strings.Split(operation, " ")[0]
-		data = strings.Split(operation, " ")[1]
-		log.Println("Player entered Command: "+command, len(command))
-		log.Println("Player entered Data: "+data, len(data))
-	} else {
-		command = strings.Split(operation, " ")[0]
-		data = ""
-		log.Println("Player entered Command: "+command, len(command))
-		log.Println("Player entered Data: "+data, len(data))
-	}
+	// TODO Update for multi space commands
+	command, data, _ := strings.Cut(operation, " ") // bind 3rd param "Found: bool"
+	log.Println("Player entered Command: "+command, len(command))
+	log.Println("Player entered Data: "+data, len(data))
 
 	var mappedCommand = MapPlayerOperations(command)
 
