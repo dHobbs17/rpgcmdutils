@@ -1,6 +1,9 @@
 package npc
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type monsterId int
 type monsterTypeId int
@@ -44,10 +47,11 @@ func (e MonsterError) Error() string { return e.Err.Error() }
 
 // MOB IMPLEMENTATIONS TODO implement classes and inheritence
 var Rat = Npc{
-	name:    RAT_NAME,
-	id:      RAT,
-	npcType: ANIMAL_NAME,
-	passive: true,
+	name:       RAT_NAME,
+	monsterId:  RAT,
+	instanceId: rand.Int(), // TODO Check for collisions
+	npcType:    ANIMAL_NAME,
+	passive:    true,
 	stats: Stats{
 		maxHp:        8,
 		morale:       2,

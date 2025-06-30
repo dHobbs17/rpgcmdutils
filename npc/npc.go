@@ -4,19 +4,20 @@ type npcState int
 type npcAction int
 
 type Npc struct {
-	name      string
-	npcType   string
-	id        monsterId
-	stats     Stats
-	abilities []string
-	spells    []string
-	skills    Skills
-	location  string
-	dialog    []string
-	state     int
-	target    string
-	actions   []npcAction
-	passive   bool
+	name       string
+	npcType    string
+	monsterId  monsterId
+	instanceId int
+	stats      Stats
+	abilities  []string
+	spells     []string
+	skills     Skills
+	location   string
+	dialog     []string
+	state      int
+	target     string
+	actions    []npcAction
+	passive    bool
 }
 
 type Stats struct {
