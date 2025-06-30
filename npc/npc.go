@@ -139,14 +139,15 @@ var NpcStates = map[npcAction]string{
 }
 
 // getters and setters
-func (n *Npc) GetName() string    { return n.name }
-func (n *Npc) GetNpcType() string { return n.npcType }
-func (n *Npc) GetLevel() int      { return n.level }
-func (n *Npc) IsLootable() bool   { return n.lootable }
-func (n *Npc) IsAlive() bool      { return !n.dead }
-func (n *Npc) IsPassive() bool    { return n.passive }
-func (n *Npc) IsInCombat() bool   { return n.inCombat }
-func (n *Npc) SetCombat(c bool)   { n.inCombat = c }
+func (n *Npc) GetName() string           { return n.name }
+func (n *Npc) GetPossibleLoot() []string { return n.possibleLoot }
+func (n *Npc) GetNpcType() string        { return n.npcType }
+func (n *Npc) GetLevel() int             { return n.level }
+func (n *Npc) IsLootable() bool          { return n.lootable }
+func (n *Npc) IsAlive() bool             { return !n.dead }
+func (n *Npc) IsPassive() bool           { return n.passive }
+func (n *Npc) IsInCombat() bool          { return n.inCombat }
+func (n *Npc) SetCombat(c bool)          { n.inCombat = c }
 
 func (n *Npc) GetQueuedAction() *NpcAction  { return n.queuedAction }
 func (n *Npc) SetQueuedAction(a *NpcAction) { n.queuedAction = a }
@@ -189,23 +190,25 @@ func (n *Npc) GetDialogWeak() string     { return getDialog(DIALOG_WEAK, n) }
 func (n *Npc) GetDialogRun() string      { return getDialog(DIALOG_RUN, n) }
 
 func (n *Npc) GetLoot() []string { return n.loot }
-func (n *Npc) generateLoot()     { n.loot = append(n.loot, n.possibleLoot[rand.IntN(len(n.possibleLoot))]) }
+func (n *Npc) generateLoot() {
+	n.loot = append(n.loot, n.possibleLoot[rand.IntN(len(n.possibleLoot)-1)])
+}
 
 func getDialog(dia monsterDialog, n *Npc) string {
 	switch dia {
 	case DIALOG_GREET:
-		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING))]
+		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING)-1)]
 	case DIALOG_DEATH:
-		return n.dialog.DEATH[rand.IntN(len(n.dialog.DEATH))]
+		return n.dialog.DEATH[rand.IntN(len(n.dialog.DEATH)-1)]
 	case DIALOG_ATTACK:
-		return n.dialog.ATTACK[rand.IntN(len(n.dialog.ATTACK))]
+		return n.dialog.ATTACK[rand.IntN(len(n.dialog.ATTACK)-1)]
 	case DIALOG_DAMAGE:
-		return n.dialog.DAMAGE[rand.IntN(len(n.dialog.DAMAGE))]
+		return n.dialog.DAMAGE[rand.IntN(len(n.dialog.DAMAGE)-1)]
 	case DIALOG_WEAK:
-		return n.dialog.WEAK[rand.IntN(len(n.dialog.WEAK))]
+		return n.dialog.WEAK[rand.IntN(len(n.dialog.WEAK)-1)]
 	case DIALOG_RUN:
-		return n.dialog.RUN[rand.IntN(len(n.dialog.RUN))]
+		return n.dialog.RUN[rand.IntN(len(n.dialog.RUN)-1)]
 	default:
-		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING))]
+		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING)-1)]
 	}
 }
