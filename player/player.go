@@ -429,6 +429,9 @@ func (p *Player) GetReputation() int     { return p.stats.Reputation }
 func (p *Player) SetReputation(n int)    { p.stats.Reputation = n }
 func (p *Player) AdjustReputation(n int) { p.stats.Reputation += n }
 
+func (p *Player) GetStats() common.Stats   { return p.stats }
+func (p *Player) GetSkills() common.Skills { return p.skills }
+
 func (p *Player) GetSp() int { return p.stats.CurrentSp }
 func (p *Player) ResetSp()   { p.stats.CurrentSp = p.stats.MaxSp }
 func (p *Player) AdjustSp(sp int) {

@@ -24,6 +24,8 @@ const CHAT_OPERATION string = "chat"
 const YELL_OPERATION string = "yell"
 const TARGET_MOB_OPERATION string = "target_mob"
 const TARGET_PLAYER_OPERATION string = "target_player"
+const PLAYER_UPDATE_OPERATION string = "player_update"
+const GET_PLAYER_OPERATION string = "get_player"
 
 const (
 	DISCONNECT serverCommands = iota
@@ -43,6 +45,8 @@ const (
 	YELL
 	TARGET_MOB
 	TARGET_PLAYER
+	PLAYER_UPDATE
+	GET_PLAYER
 )
 
 // Server info
@@ -97,6 +101,8 @@ var ServerOperations = map[serverCommands]string{
 	YELL:              YELL_OPERATION,
 	TARGET_MOB:        TARGET_MOB_OPERATION,
 	TARGET_PLAYER:     TARGET_PLAYER_OPERATION,
+	PLAYER_UPDATE:     PLAYER_UPDATE_OPERATION,
+	GET_PLAYER:        GET_PLAYER_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -125,6 +131,10 @@ func (s serverCommands) String() string {
 		return ServerOperations[TARGET_MOB]
 	case TARGET_PLAYER:
 		return ServerOperations[TARGET_PLAYER]
+	case PLAYER_UPDATE:
+		return ServerOperations[PLAYER_UPDATE]
+	case GET_PLAYER:
+		return ServerOperations[GET_PLAYER]
 	case NOTIFY:
 		return ServerOperations[NOTIFY]
 	case ALERT:
