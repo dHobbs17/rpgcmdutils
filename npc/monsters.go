@@ -55,7 +55,7 @@ var monsterTypeMap = map[monsterTypeId]string{
 func CreateMonster(id monsterId) (Npc, MonsterError) {
 	switch id {
 	case RAT:
-		var rat Npc
+		var rat = Rat
 		rat.generateLoot()
 		return rat, MonsterError{nil}
 	}
