@@ -415,8 +415,8 @@ func (p *Player) AdjustHp(hp int) {
 		p.lootable = true
 	}
 }
-func (p *Player) isInCombat() bool { return p.inCombat }
-func (p *Player) setCombat(c bool) { p.inCombat = c }
+func (p *Player) IsInCombat() bool { return p.inCombat }
+func (p *Player) SetCombat(c bool) { p.inCombat = c }
 
 func (p *Player) GetTarget() *int          { return p.target }
 func (p *Player) SetTarget(targetsId *int) { p.target = targetsId }

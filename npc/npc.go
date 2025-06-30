@@ -144,9 +144,9 @@ func (n *Npc) GetNpcType() string { return n.npcType }
 func (n *Npc) GetLevel() int      { return n.level }
 func (n *Npc) IsLootable() bool   { return n.lootable }
 func (n *Npc) IsAlive() bool      { return !n.dead }
-func (n *Npc) isPassive() bool    { return n.passive }
-func (n *Npc) isInCombat() bool   { return n.inCombat }
-func (n *Npc) setCombat(c bool)   { n.inCombat = c }
+func (n *Npc) IsPassive() bool    { return n.passive }
+func (n *Npc) IsInCombat() bool   { return n.inCombat }
+func (n *Npc) SetCombat(c bool)   { n.inCombat = c }
 
 func (n *Npc) GetQueuedAction() *NpcAction  { return n.queuedAction }
 func (n *Npc) SetQueuedAction(a *NpcAction) { n.queuedAction = a }
