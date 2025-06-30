@@ -25,6 +25,7 @@ type Npc struct {
 	defaultState npcState
 	lootable     bool
 	dead         bool
+	inCombat     bool
 	possibleLoot []string
 	loot         []string
 }
@@ -143,6 +144,8 @@ func (n *Npc) GetNpcType() string { return n.npcType }
 func (n *Npc) GetLevel() int      { return n.level }
 func (n *Npc) IsLootable() bool   { return n.lootable }
 func (n *Npc) IsAlive() bool      { return !n.dead }
+func (n *Npc) isInCombat() bool   { return n.inCombat }
+func (n *Npc) setCombat()         { n.inCombat = true }
 
 func (n *Npc) GetQueuedAction() *NpcAction  { return n.queuedAction }
 func (n *Npc) SetQueuedAction(a *NpcAction) { n.queuedAction = a }

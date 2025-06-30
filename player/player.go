@@ -23,6 +23,7 @@ type Player struct {
 	gold         int
 	lootable     bool
 	connected    bool
+	target       *int
 	statPoints   int
 	class        Class
 	stats        Stats
@@ -63,6 +64,7 @@ type Stats struct {
 	intelligence int
 	strength     int
 	dexterity    int
+	notoriety    int
 }
 
 type Skills struct {
@@ -412,6 +414,14 @@ func (p *Player) AdjustHp(hp int) {
 		p.lootable = true
 	}
 }
+
+func (p *Player) GetTarget() *int          { return p.target }
+func (p *Player) SetTarget(targetsId *int) { p.target = targetsId }
+func (p *Player) ResetTarget()             { p.target = nil }
+
+func (p *Player) GetNotoriety() int     { return p.stats.notoriety }
+func (p *Player) SetNotoriety(n int)    { p.stats.notoriety = n }
+func (p *Player) AdjustNotoriety(n int) { p.stats.notoriety += n }
 
 func (p *Player) GetSp() int { return p.stats.currentSp }
 func (p *Player) ResetSp()   { p.stats.currentSp = p.stats.maxSp }
