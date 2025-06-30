@@ -333,8 +333,14 @@ func (p *Player) ClearConn(c net.Conn) { p.conn = c }
 func (p *Player) GetConnected() bool  { return p.connected }
 func (p *Player) SetConnected(b bool) { p.connected = b }
 
-func (p *Player) GetIdle() int  { return p.id }
-func (p *Player) SetIdle(i int) { p.id = i }
+func (p *Player) GetIdle() int { return p.id }
+func (p *Player) AdjustIdle(i int) {
+	p.idle += i
+	if p.idle <= 0 {
+		p.idle = 0
+	}
+}
+func (p *Player) SetIdle(i int) { p.idle = i }
 
 func (p *Player) GetHit() int    { return p.stats.hit }
 func (p *Player) GetAttack() int { return p.stats.attack }
