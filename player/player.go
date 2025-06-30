@@ -27,6 +27,7 @@ type Player struct {
 	statPoints   int
 	class        Class
 	stats        Stats
+	inCombat     bool
 	skills       Skills
 	spells       []string
 	location     int
@@ -414,6 +415,8 @@ func (p *Player) AdjustHp(hp int) {
 		p.lootable = true
 	}
 }
+func (p *Player) isInCombat() bool { return p.inCombat }
+func (p *Player) setCombat(c bool) { p.inCombat = c }
 
 func (p *Player) GetTarget() *int          { return p.target }
 func (p *Player) SetTarget(targetsId *int) { p.target = targetsId }
