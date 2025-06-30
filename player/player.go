@@ -3,6 +3,7 @@ package player
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dHobbs17/rpgcmdutils/common"
 	"log"
 	"math/rand"
 	"net"
@@ -13,7 +14,7 @@ import (
 
 type Player struct {
 	name         string
-	queuedAction *PlayerMessage
+	queuedAction *common.Action
 	conn         net.Conn
 	level        int
 	id           int
@@ -26,9 +27,9 @@ type Player struct {
 	target       *int
 	statPoints   int
 	class        Class
-	stats        Stats
+	stats        common.Stats
 	inCombat     bool
-	skills       Skills
+	skills       common.Skills
 	spells       []string
 	location     int
 	encoder      *json.Encoder
@@ -348,8 +349,8 @@ func (p *Player) AdjustIdle(i int) {
 }
 func (p *Player) SetIdle(i int) { p.idle = i }
 
-func (p *Player) GetHit() int    { return p.stats.hit }
-func (p *Player) GetAttack() int { return p.stats.attack }
+func (p *Player) GetHit() int    { return p.stats.Hit }
+func (p *Player) GetAttack() int { return p.stats.Attack }
 
 func (p *Player) GetId() int { return p.id }
 
@@ -358,15 +359,17 @@ func (p *Player) GetName() string { return p.name }
 func (p *Player) IsLootable() bool { return p.lootable }
 func (p *Player) IsAlive() bool    { return !p.dead }
 
-func (p *Player) GetQueuedAction() *PlayerMessage  { return p.queuedAction }
-func (p *Player) SetQueuedAction(a *PlayerMessage) { p.queuedAction = a }
+func (p *Player) GetQueuedAction() *common.Action  { return p.queuedAction }
+func (p *Player) SetQueuedAction(a *common.Action) { p.queuedAction = a }
 func (p *Player) ClearQueuedAction()               { p.queuedAction = nil }
 
 func (p *Player) GetEncoder() *json.Encoder  { return p.encoder }
 func (p *Player) SetEncoder(e *json.Encoder) { p.encoder = e }
 func (p *Player) ClearEncoder()              { p.encoder = nil }
+func (p *Player) CalcHit() int               { return p.stats.Hit }
+func (p *Player) CalcDamage() int            { return p.stats.Attack }
 
-func (p *Player) GetGold() int { return p.stats.currentHp }
+func (p *Player) GetGold() int { return p.stats.CurrentHp }
 func (p *Player) AdjustGold(g int) {
 	p.gold += g
 	if p.gold <= 0 {
@@ -405,12 +408,12 @@ func (p *Player) KillPlayer() {
 	p.lootable = true
 }
 
-func (p *Player) GetHp() int { return p.stats.currentHp }
-func (p *Player) ResetHp()   { p.stats.currentHp = p.stats.maxHp }
+func (p *Player) GetHp() int { return p.stats.CurrentHp }
+func (p *Player) ResetHp()   { p.stats.CurrentHp = p.stats.MaxHp }
 func (p *Player) AdjustHp(hp int) {
-	p.stats.currentHp += hp
-	if p.stats.currentHp <= 0 {
-		p.stats.currentHp = 0
+	p.stats.CurrentHp += hp
+	if p.stats.CurrentHp <= 0 {
+		p.stats.CurrentHp = 0
 		p.dead = true
 		p.lootable = true
 	}
@@ -422,26 +425,26 @@ func (p *Player) GetTarget() *int          { return p.target }
 func (p *Player) SetTarget(targetsId *int) { p.target = targetsId }
 func (p *Player) ResetTarget()             { p.target = nil }
 
-func (p *Player) GetNotoriety() int     { return p.stats.notoriety }
-func (p *Player) SetNotoriety(n int)    { p.stats.notoriety = n }
-func (p *Player) AdjustNotoriety(n int) { p.stats.notoriety += n }
+func (p *Player) GetReputation() int     { return p.stats.Reputation }
+func (p *Player) SetReputation(n int)    { p.stats.Reputation = n }
+func (p *Player) AdjustReputation(n int) { p.stats.Reputation += n }
 
-func (p *Player) GetSp() int { return p.stats.currentSp }
-func (p *Player) ResetSp()   { p.stats.currentSp = p.stats.maxSp }
+func (p *Player) GetSp() int { return p.stats.CurrentSp }
+func (p *Player) ResetSp()   { p.stats.CurrentSp = p.stats.MaxSp }
 func (p *Player) AdjustSp(sp int) {
-	p.stats.currentSp += sp
-	if p.stats.currentSp <= 0 {
-		p.stats.currentSp = 0
+	p.stats.CurrentSp += sp
+	if p.stats.CurrentSp <= 0 {
+		p.stats.CurrentSp = 0
 	}
 }
 
 func NewPlayer(conn net.Conn, name string) Player {
 	return Player{id: rand.Int(), // TODO Check for collisions,
-		stats: Stats{
-			currentHp: 10,
-			maxHp:     10,
-			hit:       1,
-			attack:    1,
+		stats: common.Stats{
+			CurrentHp: 10,
+			MaxHp:     10,
+			Hit:       1,
+			Attack:    1,
 		},
 		conn:     conn,
 		name:     name,

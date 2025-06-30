@@ -49,7 +49,7 @@ type spellModifier struct {
 
 // CLASS IMPLEMENTATIONS -- TODO implement these via JSON
 var Novice = Class{
-	name:     "Novice",
+	name:     "Peasant",
 	jobLevel: 1,
 }
 

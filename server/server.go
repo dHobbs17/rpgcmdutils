@@ -14,9 +14,16 @@ const TICK_OPERATION string = "tick"
 const QUEUE_OPERATION string = "queue"
 const ACTION_OPERATION string = "action"
 const NOTIFY_OPERATION string = "notify"
+const COMBAT_MOB_ATTACK_OPERATION string = "combat_mob_attack"
+const COMBAT_HIT_OPERATION string = "combat_hit"
+const COMBAT_KILL_OPERATION string = "combat_kill"
+const COMBAT_DIALOG_OPERATION string = "combat_dialog"
 const ALERT_OPERATION string = "alert"
 const EVENT_OPERATION string = "event"
 const CHAT_OPERATION string = "chat"
+const YELL_OPERATION string = "yell"
+const TARGET_MOB_OPERATION string = "target_mob"
+const TARGET_PLAYER_OPERATION string = "target_player"
 
 const (
 	DISCONNECT serverCommands = iota
@@ -24,11 +31,18 @@ const (
 	ACK
 	TICK
 	QUEUE
+	COMBAT_MOB_ATTACK
+	COMBAT_HIT
+	COMBAT_KILL
+	COMBAT_DIALOG
 	ACTION
 	NOTIFY
 	CHAT
 	ALERT
 	EVENT
+	YELL
+	TARGET_MOB
+	TARGET_PLAYER
 )
 
 // Server info
@@ -66,16 +80,23 @@ type ServerErr struct{ Err error }
 func (e ServerErr) Error() string { return e.Err.Error() }
 
 var ServerOperations = map[serverCommands]string{
-	DISCONNECT: DISCONNECT_OPERATION,
-	CONNECT:    CONNECT_OPERATION,
-	ACK:        ACK_OPERATION,
-	TICK:       TICK_OPERATION,
-	QUEUE:      QUEUE_OPERATION,
-	ACTION:     ACTION_OPERATION,
-	NOTIFY:     NOTIFY_OPERATION,
-	CHAT:       CHAT_OPERATION,
-	ALERT:      ALERT_OPERATION,
-	EVENT:      EVENT_OPERATION,
+	DISCONNECT:        DISCONNECT_OPERATION,
+	CONNECT:           CONNECT_OPERATION,
+	ACK:               ACK_OPERATION,
+	TICK:              TICK_OPERATION,
+	QUEUE:             QUEUE_OPERATION,
+	COMBAT_MOB_ATTACK: COMBAT_MOB_ATTACK_OPERATION,
+	COMBAT_HIT:        COMBAT_HIT_OPERATION,
+	COMBAT_KILL:       COMBAT_KILL_OPERATION,
+	COMBAT_DIALOG:     COMBAT_DIALOG_OPERATION,
+	ACTION:            ACTION_OPERATION,
+	NOTIFY:            NOTIFY_OPERATION,
+	CHAT:              CHAT_OPERATION,
+	ALERT:             ALERT_OPERATION,
+	EVENT:             EVENT_OPERATION,
+	YELL:              YELL_OPERATION,
+	TARGET_MOB:        TARGET_MOB_OPERATION,
+	TARGET_PLAYER:     TARGET_PLAYER_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -92,6 +113,18 @@ func (s serverCommands) String() string {
 		return ServerOperations[QUEUE]
 	case ACTION:
 		return ServerOperations[ACTION]
+	case COMBAT_MOB_ATTACK:
+		return ServerOperations[COMBAT_MOB_ATTACK]
+	case COMBAT_HIT:
+		return ServerOperations[COMBAT_HIT]
+	case COMBAT_KILL:
+		return ServerOperations[COMBAT_KILL]
+	case COMBAT_DIALOG:
+		return ServerOperations[COMBAT_DIALOG]
+	case TARGET_MOB:
+		return ServerOperations[TARGET_MOB]
+	case TARGET_PLAYER:
+		return ServerOperations[TARGET_PLAYER]
 	case NOTIFY:
 		return ServerOperations[NOTIFY]
 	case ALERT:
@@ -100,6 +133,8 @@ func (s serverCommands) String() string {
 		return ServerOperations[EVENT]
 	case CHAT:
 		return ServerOperations[CHAT]
+	case YELL:
+		return ServerOperations[YELL]
 	default:
 		return INVALID_OPERATION
 	}

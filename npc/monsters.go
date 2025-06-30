@@ -2,6 +2,7 @@ package npc
 
 import (
 	"fmt"
+	"github.com/dHobbs17/rpgcmdutils/common"
 	"math/rand"
 )
 
@@ -69,24 +70,24 @@ func (e MonsterError) Error() string { return e.Err.Error() }
 
 // MOB IMPLEMENTATIONS -- TODO implement these via JSON
 var Rat = Npc{
-	name:       RAT_NAME,
-	monsterId:  RAT,
-	instanceId: rand.Int(), // TODO Check for collisions
-	npcType:    ANIMAL_NAME,
-	passive:    true,
-	stats: Stats{
-		maxHp:        8,
-		currentHp:    8,
-		morale:       2,
-		attack:       2,
-		dodge:        5,
-		intelligence: 1,
-		strength:     1,
-		dexterity:    4,
+	name:      RAT_NAME,
+	monsterId: RAT,
+	id:        rand.Int(), // TODO Check for collisions
+	npcType:   ANIMAL_NAME,
+	passive:   true,
+	stats: common.Stats{
+		MaxHp:        8,
+		CurrentHp:    8,
+		Morale:       2,
+		Attack:       2,
+		Dodge:        5,
+		Intelligence: 1,
+		Strength:     1,
+		Dexterity:    4,
 	},
-	skills: Skills{
-		stealth:  4,
-		survival: 4,
+	skills: common.Skills{
+		Stealth:  4,
+		Survival: 4,
 	},
 	dialog: npcDialogs{
 		GREETING: []string{"Rat lets out a piecing Screech", "Rat does a spin in anger"},

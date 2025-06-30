@@ -1,6 +1,9 @@
 package npc
 
-import "math/rand/v2"
+import (
+	"github.com/dHobbs17/rpgcmdutils/common"
+	"math/rand/v2"
+)
 
 type npcState int
 type npcAction int
@@ -10,12 +13,12 @@ type Npc struct {
 	npcType      string
 	monsterId    monsterId
 	level        int
-	instanceId   int
-	stats        Stats
-	queuedAction *NpcAction
+	id           int
+	stats        common.Stats
+	queuedAction *common.Action
 	abilities    []string
 	spells       []string
-	skills       Skills
+	skills       common.Skills
 	location     string
 	dialog       npcDialogs
 	state        npcState
@@ -28,43 +31,6 @@ type Npc struct {
 	inCombat     bool
 	possibleLoot []string
 	loot         []string
-}
-
-type NpcAction struct {
-	Action string
-	Data   string
-	Args   []string
-}
-
-type Stats struct {
-	currentHp    int
-	currentSp    int
-	maxHp        int
-	maxSp        int
-	morale       int
-	attack       int
-	dodge        int
-	parry        int
-	block        int
-	intelligence int
-	strength     int
-	dexterity    int
-}
-
-type Skills struct {
-	destruction int
-	conjuration int
-	illusion    int
-	perception  int
-	deception   int
-	stealth     int
-	swords      int
-	maces       int
-	axes        int
-	ranged      int
-	wands       int
-	block       int
-	survival    int
 }
 
 // STATES
@@ -149,38 +115,45 @@ func (n *Npc) IsPassive() bool           { return n.passive }
 func (n *Npc) IsInCombat() bool          { return n.inCombat }
 func (n *Npc) SetCombat(c bool)          { n.inCombat = c }
 
-func (n *Npc) GetQueuedAction() *NpcAction  { return n.queuedAction }
-func (n *Npc) SetQueuedAction(a *NpcAction) { n.queuedAction = a }
-func (n *Npc) ClearQueuedAction()           { n.queuedAction = nil }
+func (n *Npc) GetQueuedAction() *common.Action  { return n.queuedAction }
+func (n *Npc) SetQueuedAction(a *common.Action) { n.queuedAction = a }
+func (n *Npc) ClearQueuedAction()               { n.queuedAction = nil }
 
 func (n *Npc) GetState() npcState  { return n.state }
 func (n *Npc) SetState(s npcState) { n.state = s }
 func (n *Npc) ResetState()         { n.state = n.defaultState }
 
-func (n *Npc) GetHp() int { return n.stats.currentHp }
+func (n *Npc) GetHp() int { return n.stats.CurrentHp }
 
 func (n *Npc) AdjustHp(hp int) {
-	n.stats.currentHp += hp
-	if n.stats.currentHp <= 0 {
-		n.stats.currentHp = 0
+	n.stats.CurrentHp += hp
+	if n.stats.CurrentHp <= 0 {
+		n.stats.CurrentHp = 0
 		n.dead = true
 		n.lootable = true
 	}
 }
 
-func (n *Npc) ResetHp() { n.stats.currentHp = n.stats.maxHp }
+func (n *Npc) ResetHp() { n.stats.CurrentHp = n.stats.MaxHp }
 
-func (n *Npc) GetId() monsterId { return n.monsterId }
+func (n *Npc) GetMonsterId() monsterId { return n.monsterId }
 
-func (n *Npc) GetInstanceId() int { return n.instanceId }
+func (n *Npc) GetId() int { return n.id }
 
 func (n *Npc) GetTarget() *int          { return n.target }
 func (n *Npc) SetTarget(targetsId *int) { n.target = targetsId }
 func (n *Npc) ResetTarget()             { n.target = nil }
 
-func (n *Npc) GetSp() int   { return n.stats.currentSp }
-func (n *Npc) SetSp(sp int) { n.stats.currentSp = sp }
-func (n *Npc) ResetSp()     { n.stats.currentSp = n.stats.maxSp }
+func (n *Npc) GetSp() int   { return n.stats.CurrentSp }
+func (n *Npc) SetSp(sp int) { n.stats.CurrentSp = sp }
+func (n *Npc) ResetSp()     { n.stats.CurrentSp = n.stats.MaxSp }
+
+func (n *Npc) AdjustSp(sp int) {
+	n.stats.CurrentSp += sp
+	if n.stats.CurrentSp <= 0 {
+		n.stats.CurrentSp = 0
+	}
+}
 
 func (n *Npc) GetDialogGreeting() string { return getDialog(DIALOG_GREET, n) }
 func (n *Npc) GetDialogDeath() string    { return getDialog(DIALOG_DEATH, n) }
@@ -188,8 +161,10 @@ func (n *Npc) GetDialogAttack() string   { return getDialog(DIALOG_ATTACK, n) }
 func (n *Npc) GetDialogDamage() string   { return getDialog(DIALOG_DAMAGE, n) }
 func (n *Npc) GetDialogWeak() string     { return getDialog(DIALOG_WEAK, n) }
 func (n *Npc) GetDialogRun() string      { return getDialog(DIALOG_RUN, n) }
+func (n *Npc) CalcHit() int              { return n.stats.Hit }
+func (n *Npc) CalcDamage() int           { return n.stats.Attack }
+func (n *Npc) GetLoot() []string         { return n.loot }
 
-func (n *Npc) GetLoot() []string { return n.loot }
 func (n *Npc) generateLoot() {
 	n.loot = append(n.loot, n.possibleLoot[rand.IntN(len(n.possibleLoot)-1)])
 }
