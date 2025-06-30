@@ -76,6 +76,7 @@ var Rat = Npc{
 	passive:    true,
 	stats: Stats{
 		maxHp:        8,
+		currentHp:    8,
 		morale:       2,
 		attack:       2,
 		dodge:        5,
