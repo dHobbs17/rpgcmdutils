@@ -75,6 +75,7 @@ const (
 	CAST_OPERATION       string = "cast"
 	USE_OPERATION        string = "use"
 	GUARD_OPERATION      string = "guard"
+	SEARCH_OPERATION     string = "search"
 	TARGET_OPERATION     string = "target"
 	STALK_OPERATION      string = "stalk"
 	FOLLOW_OPERATION     string = "follow"
@@ -94,6 +95,7 @@ const (
 	MOVE PlayerCommands = iota // Move must be first
 	ATTACK
 	CAST
+	SEARCH
 	USE
 	GUARD
 	GRAB
@@ -118,6 +120,7 @@ var playerOperations = map[PlayerCommands]string{
 	USE:        USE_OPERATION,
 	GRAB:       GRAB_OPERATION,
 	GUARD:      GUARD_OPERATION,
+	SEARCH:     SEARCH_OPERATION,
 	TARGET:     TARGET_OPERATION,
 	STALK:      STALK_OPERATION,
 	FOLLOW:     FOLLOW_OPERATION,
@@ -170,6 +173,8 @@ func MapPlayerOperations(s string) string {
 		return playerOperations[USE]
 	case CAST_OPERATION:
 		return playerOperations[CAST]
+	case SEARCH_OPERATION:
+		return playerOperations[SEARCH]
 	case TARGET_OPERATION:
 		return playerOperations[TARGET]
 	case GUARD_OPERATION:
@@ -212,6 +217,8 @@ func (s PlayerCommands) String() string {
 		return playerOperations[HIDE]
 	case ATTACK:
 		return playerOperations[ATTACK]
+	case SEARCH:
+		return playerOperations[SEARCH]
 	case GRAB:
 		return playerOperations[GRAB]
 	case CAST:
