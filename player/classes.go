@@ -7,7 +7,7 @@ type Class struct {
 	statModifier    statModifier
 	spellModifier   spellModifier
 	abilityModifier abilityModifier
-	jobLevel        string
+	jobLevel        int
 	jobXp           int
 	abilities       []string
 	jobPoints       int
@@ -49,7 +49,8 @@ type spellModifier struct {
 
 // CLASS IMPLEMENTATIONS -- TODO implement these via JSON
 var Novice = Class{
-	name: "Novice",
+	name:     "Novice",
+	jobLevel: 1,
 }
 
 var Knight = Class{

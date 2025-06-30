@@ -138,24 +138,23 @@ var NpcStates = map[npcAction]string{
 }
 
 // getters and setters
-func (n *Npc) getName() string    { return n.name }
-func (n *Npc) getNpcType() string { return n.npcType }
-func (n *Npc) getLevel() int      { return n.level }
-func (n *Npc) isLootable() bool   { return n.lootable }
-func (n *Npc) isAlive() bool      { return !n.dead }
+func (n *Npc) GetName() string    { return n.name }
+func (n *Npc) GetNpcType() string { return n.npcType }
+func (n *Npc) GetLevel() int      { return n.level }
+func (n *Npc) IsLootable() bool   { return n.lootable }
+func (n *Npc) IsAlive() bool      { return !n.dead }
 
-func (n *Npc) getQueuedAction() *NpcAction  { return n.queuedAction }
-func (n *Npc) setQueuedAction(a *NpcAction) { n.queuedAction = a }
-func (n *Npc) clearQueuedAction()           { n.queuedAction = nil }
+func (n *Npc) GetQueuedAction() *NpcAction  { return n.queuedAction }
+func (n *Npc) SetQueuedAction(a *NpcAction) { n.queuedAction = a }
+func (n *Npc) ClearQueuedAction()           { n.queuedAction = nil }
 
-func (n *Npc) getState() npcState  { return n.state }
-func (n *Npc) setState(s npcState) { n.state = s }
-func (n *Npc) resetState()         { n.state = n.defaultState }
+func (n *Npc) GetState() npcState  { return n.state }
+func (n *Npc) SetState(s npcState) { n.state = s }
+func (n *Npc) ResetState()         { n.state = n.defaultState }
 
-func (n *Npc) getHp() int   { return n.stats.currentHp }
-func (n *Npc) setHp(hp int) { n.stats.currentHp = hp }
+func (n *Npc) GetHp() int { return n.stats.currentHp }
 
-func (n *Npc) adjustHp(hp int) {
+func (n *Npc) AdjustHp(hp int) {
 	n.stats.currentHp += hp
 	if n.stats.currentSp <= 0 {
 		n.stats.currentHp = 0
@@ -164,28 +163,28 @@ func (n *Npc) adjustHp(hp int) {
 	}
 }
 
-func (n *Npc) resetHp() { n.stats.currentHp = n.stats.maxHp }
+func (n *Npc) ResetHp() { n.stats.currentHp = n.stats.maxHp }
 
-func (n *Npc) getId() monsterId { return n.monsterId }
+func (n *Npc) GetId() monsterId { return n.monsterId }
 
-func (n *Npc) getInstanceId() int { return n.instanceId }
+func (n *Npc) GetInstanceId() int { return n.instanceId }
 
-func (n *Npc) getTarget() *int          { return n.target }
-func (n *Npc) setTarget(targetsId *int) { n.target = targetsId }
-func (n *Npc) resetTarget()             { n.target = nil }
+func (n *Npc) GetTarget() *int          { return n.target }
+func (n *Npc) SetTarget(targetsId *int) { n.target = targetsId }
+func (n *Npc) ResetTarget()             { n.target = nil }
 
-func (n *Npc) getSp() int   { return n.stats.currentSp }
-func (n *Npc) setSp(sp int) { n.stats.currentSp = sp }
-func (n *Npc) resetSp()     { n.stats.currentSp = n.stats.maxSp }
+func (n *Npc) GetSp() int   { return n.stats.currentSp }
+func (n *Npc) SetSp(sp int) { n.stats.currentSp = sp }
+func (n *Npc) ResetSp()     { n.stats.currentSp = n.stats.maxSp }
 
-func (n *Npc) getDialogGreeting() string { return getDialog(DIALOG_GREET, n) }
-func (n *Npc) getDialogDeath() string    { return getDialog(DIALOG_DEATH, n) }
-func (n *Npc) getDialogAttack() string   { return getDialog(DIALOG_ATTACK, n) }
-func (n *Npc) getDialogDamage() string   { return getDialog(DIALOG_DAMAGE, n) }
-func (n *Npc) getDialogWeak() string     { return getDialog(DIALOG_WEAK, n) }
-func (n *Npc) getDialogRun() string      { return getDialog(DIALOG_RUN, n) }
+func (n *Npc) GetDialogGreeting() string { return getDialog(DIALOG_GREET, n) }
+func (n *Npc) GetDialogDeath() string    { return getDialog(DIALOG_DEATH, n) }
+func (n *Npc) GetDialogAttack() string   { return getDialog(DIALOG_ATTACK, n) }
+func (n *Npc) GetDialogDamage() string   { return getDialog(DIALOG_DAMAGE, n) }
+func (n *Npc) GetDialogWeak() string     { return getDialog(DIALOG_WEAK, n) }
+func (n *Npc) GetDialogRun() string      { return getDialog(DIALOG_RUN, n) }
 
-func (n *Npc) getLoot() []string { return n.loot }
+func (n *Npc) GetLoot() []string { return n.loot }
 func (n *Npc) generateLoot()     { n.loot = append(n.loot, n.possibleLoot[rand.IntN(len(n.possibleLoot))]) }
 
 func getDialog(dia monsterDialog, n *Npc) string {

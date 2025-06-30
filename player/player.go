@@ -326,33 +326,36 @@ type PlayerError struct{ Err error }
 func (e PlayerError) Error() string { return e.Err.Error() }
 
 // getters and setters
-func (p *Player) getConn() net.Conn    { return p.conn }
-func (p *Player) setConn(c net.Conn)   { p.conn = c }
-func (p *Player) clearConn(c net.Conn) { p.conn = c }
+func (p *Player) GetConn() net.Conn    { return p.conn }
+func (p *Player) SetConn(c net.Conn)   { p.conn = c }
+func (p *Player) ClearConn(c net.Conn) { p.conn = c }
 
-func (p *Player) getConnected() bool  { return p.connected }
-func (p *Player) setConnected(b bool) { p.connected = b }
+func (p *Player) GetConnected() bool  { return p.connected }
+func (p *Player) SetConnected(b bool) { p.connected = b }
 
-func (p *Player) getIdle() int  { return p.id }
-func (p *Player) setIdle(i int) { p.id = i }
+func (p *Player) GetIdle() int  { return p.id }
+func (p *Player) SetIdle(i int) { p.id = i }
 
-func (p *Player) getId() int { return p.id }
+func (p *Player) GetHit() int    { return p.stats.hit }
+func (p *Player) GetAttack() int { return p.stats.attack }
 
-func (p *Player) getName() string { return p.name }
+func (p *Player) GetId() int { return p.id }
 
-func (p *Player) isLootable() bool { return p.lootable }
-func (p *Player) isAlive() bool    { return !p.dead }
+func (p *Player) GetName() string { return p.name }
 
-func (p *Player) getQueuedAction() *PlayerMessage  { return p.queuedAction }
-func (p *Player) setQueuedAction(a *PlayerMessage) { p.queuedAction = a }
-func (p *Player) clearQueuedAction()               { p.queuedAction = nil }
+func (p *Player) IsLootable() bool { return p.lootable }
+func (p *Player) IsAlive() bool    { return !p.dead }
 
-func (p *Player) getEncoder() *json.Encoder  { return p.encoder }
-func (p *Player) setEncoder(e *json.Encoder) { p.encoder = e }
-func (p *Player) clearEncoder()              { p.encoder = nil }
+func (p *Player) GetQueuedAction() *PlayerMessage  { return p.queuedAction }
+func (p *Player) SetQueuedAction(a *PlayerMessage) { p.queuedAction = a }
+func (p *Player) ClearQueuedAction()               { p.queuedAction = nil }
 
-func (p *Player) getGold() int { return p.stats.currentHp }
-func (p *Player) adjustGold(g int) {
+func (p *Player) GetEncoder() *json.Encoder  { return p.encoder }
+func (p *Player) SetEncoder(e *json.Encoder) { p.encoder = e }
+func (p *Player) ClearEncoder()              { p.encoder = nil }
+
+func (p *Player) GetGold() int { return p.stats.currentHp }
+func (p *Player) AdjustGold(g int) {
 	p.gold += g
 	if p.gold <= 0 {
 		p.gold = 0
@@ -360,7 +363,7 @@ func (p *Player) adjustGold(g int) {
 }
 
 // TODO Add Loot IDs
-func (p *Player) addToInventory(loot string) {
+func (p *Player) AddToInventory(loot string) {
 	p.inventory = append(p.inventory, loot)
 }
 
@@ -369,7 +372,7 @@ func (p *Player) addToInventory(loot string) {
 //	p.inventory = append(p.inventory, loot)
 //}
 
-func (p *Player) killPlayer() {
+func (p *Player) KillPlayer() {
 	// add and drop inventory
 	p.loot = p.inventory
 	p.inventory = []string{}
@@ -390,9 +393,9 @@ func (p *Player) killPlayer() {
 	p.lootable = true
 }
 
-func (p *Player) getHp() int { return p.stats.currentHp }
-func (p *Player) resetHp()   { p.stats.currentHp = p.stats.maxHp }
-func (p *Player) adjustHp(hp int) {
+func (p *Player) GetHp() int { return p.stats.currentHp }
+func (p *Player) ResetHp()   { p.stats.currentHp = p.stats.maxHp }
+func (p *Player) AdjustHp(hp int) {
 	p.stats.currentHp += hp
 	if p.stats.currentHp <= 0 {
 		p.stats.currentHp = 0
@@ -401,16 +404,16 @@ func (p *Player) adjustHp(hp int) {
 	}
 }
 
-func (p *Player) getSp() int { return p.stats.currentSp }
-func (p *Player) resetSp()   { p.stats.currentSp = p.stats.maxSp }
-func (p *Player) adjustSp(sp int) {
+func (p *Player) GetSp() int { return p.stats.currentSp }
+func (p *Player) ResetSp()   { p.stats.currentSp = p.stats.maxSp }
+func (p *Player) AdjustSp(sp int) {
 	p.stats.currentSp += sp
 	if p.stats.currentSp <= 0 {
 		p.stats.currentSp = 0
 	}
 }
 
-func newPlayer(conn net.Conn, name string) Player {
+func NewPlayer(conn net.Conn, name string) Player {
 	return Player{id: rand.Int(), // TODO Check for collisions,
 		stats: Stats{
 			currentHp: 10,
