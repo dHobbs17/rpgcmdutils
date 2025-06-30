@@ -1,16 +1,79 @@
 package player
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/dHobbs17/rpgcmdutils/server"
 	"log"
+	"net"
 	"strings"
 )
+
+type Player struct {
+	name         string
+	queuedAction *server.ServerMessage
+	conn         net.Conn
+	level        int
+	xp           int
+	idle         int
+	connected    bool
+	statPoints   int
+	class        Class
+	stats        Stats
+	skills       Skills
+	spells       []string
+	location     string
+	encoder      *json.Encoder
+	decoder      *json.Decoder
+	quests       []int
+}
+
+type Stats struct {
+	currentHp    int
+	currentSp    int
+	maxHp        int
+	maxSp        int
+	morale       int
+	attack       int
+	dodge        int
+	parry        int
+	block        int
+	intelligence int
+	strength     int
+	dexterity    int
+}
+
+type Skills struct {
+	destruction int
+	conjuration int
+	illusion    int
+	perception  int
+	deception   int
+	stealth     int
+	swords      int
+	maces       int
+	axes        int
+	ranged      int
+	wands       int
+	block       int
+	survival    int
+}
+type PlayerCommands int
+
+type PlayerMessage struct {
+	Action string
+	Data   string
+	Args   []string
+}
 
 // Player Sends...
 const (
 	MOVE_OPERATION       string = "move"
 	ATTACK_OPERATION     string = "attack"
 	GRAB_OPERATION       string = "grab"
+	CAST_OPERATION       string = "cast"
+	USE_OPERATION        string = "use"
+	GUARD_OPERATION      string = "guard"
 	TARGET_OPERATION     string = "target"
 	STALK_OPERATION      string = "stalk"
 	FOLLOW_OPERATION     string = "follow"
@@ -29,6 +92,9 @@ const (
 const (
 	MOVE PlayerCommands = iota // Move must be first
 	ATTACK
+	CAST
+	USE
+	GUARD
 	GRAB
 	TARGET
 	STALK
@@ -44,22 +110,13 @@ const (
 	DISCONNECT // Disconnect must be last
 )
 
-type PlayerCommands int
-
-type PlayerMessage struct {
-	Action string
-	Data   string
-	Args   []string
-}
-
-type PlayerError struct{ Err error }
-
-func (e PlayerError) Error() string { return e.Err.Error() }
-
 var playerOperations = map[PlayerCommands]string{
 	MOVE:       MOVE_OPERATION,
 	ATTACK:     ATTACK_OPERATION,
+	CAST:       CAST_OPERATION,
+	USE:        USE_OPERATION,
 	GRAB:       GRAB_OPERATION,
+	GUARD:      GUARD_OPERATION,
 	TARGET:     TARGET_OPERATION,
 	STALK:      STALK_OPERATION,
 	FOLLOW:     FOLLOW_OPERATION,
@@ -108,8 +165,14 @@ func MapPlayerOperations(s string) string {
 		return playerOperations[ATTACK]
 	case GRAB_OPERATION:
 		return playerOperations[GRAB]
+	case USE_OPERATION:
+		return playerOperations[USE]
+	case CAST_OPERATION:
+		return playerOperations[CAST]
 	case TARGET_OPERATION:
 		return playerOperations[TARGET]
+	case GUARD_OPERATION:
+		return playerOperations[GUARD]
 	case STALK_OPERATION:
 		return playerOperations[STALK]
 	case FOLLOW_OPERATION:
@@ -150,6 +213,12 @@ func (s PlayerCommands) String() string {
 		return playerOperations[ATTACK]
 	case GRAB:
 		return playerOperations[GRAB]
+	case CAST:
+		return playerOperations[CAST]
+	case GUARD:
+		return playerOperations[GUARD]
+	case USE:
+		return playerOperations[USE]
 	case TARGET:
 		return playerOperations[TARGET]
 	case STALK:
@@ -174,3 +243,8 @@ func (s PlayerCommands) String() string {
 		return INVALID_OPERATION
 	}
 }
+
+// Errors
+type PlayerError struct{ Err error }
+
+func (e PlayerError) Error() string { return e.Err.Error() }
