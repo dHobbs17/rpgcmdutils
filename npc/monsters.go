@@ -42,11 +42,12 @@ type MonsterError struct{ Err error }
 
 func (e MonsterError) Error() string { return e.Err.Error() }
 
-// MOB IMPLEMENTATIONS
+// MOB IMPLEMENTATIONS TODO implement classes and inheritence
 var Rat = Npc{
 	name:    RAT_NAME,
 	id:      RAT,
 	npcType: ANIMAL_NAME,
+	passive: true,
 	stats: Stats{
 		maxHp:        8,
 		morale:       2,

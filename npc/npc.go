@@ -16,6 +16,7 @@ type Npc struct {
 	state     int
 	target    string
 	actions   []npcAction
+	passive   bool
 }
 
 type Stats struct {

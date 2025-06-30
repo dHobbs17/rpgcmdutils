@@ -14,6 +14,7 @@ type Player struct {
 	queuedAction *server.ServerMessage
 	conn         net.Conn
 	level        int
+	id           int
 	xp           int
 	idle         int
 	connected    bool

@@ -2,6 +2,7 @@ package player
 
 type Class struct {
 	name            string
+	id              int
 	skillModifier   skillModifier
 	statModifier    statModifier
 	spellModifier   spellModifier
