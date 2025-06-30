@@ -55,6 +55,7 @@ type Stats struct {
 	maxHp        int
 	maxSp        int
 	morale       int
+	hit          int
 	attack       int
 	dodge        int
 	parry        int
@@ -98,6 +99,7 @@ const (
 	GUARD_OPERATION      string = "guard"
 	SEARCH_OPERATION     string = "search"
 	TARGET_OPERATION     string = "target"
+	SWAP_OPERATION       string = "swap"
 	STALK_OPERATION      string = "stalk"
 	FOLLOW_OPERATION     string = "follow"
 	PARTY_OPERATION      string = "party"
@@ -117,6 +119,7 @@ const (
 	ATTACK
 	CAST
 	SEARCH
+	SWAP
 	USE
 	GUARD
 	GRAB
@@ -187,6 +190,7 @@ var playerOperations = map[PlayerCommands]string{
 	PARTY:      PARTY_OPERATION,
 	CLAN:       CLAN_OPERATION,
 	LOOK:       LOOK_OPERATION,
+	SWAP:       SWAP_OPERATION,
 	LOOT:       LOOT_OPERATION,
 	INVITE:     INVITE_OPERATION,
 	LEAVE:      LEAVE_OPERATION,
@@ -239,6 +243,8 @@ func MapPlayerOperations(s string) string {
 		return playerOperations[TARGET]
 	case GUARD_OPERATION:
 		return playerOperations[GUARD]
+	case SWAP_OPERATION:
+		return playerOperations[SWAP]
 	case STALK_OPERATION:
 		return playerOperations[STALK]
 	case FOLLOW_OPERATION:
@@ -285,6 +291,8 @@ func (s PlayerCommands) String() string {
 		return playerOperations[CAST]
 	case GUARD:
 		return playerOperations[GUARD]
+	case SWAP:
+		return playerOperations[SWAP]
 	case USE:
 		return playerOperations[USE]
 	case TARGET:
@@ -343,8 +351,7 @@ func (p *Player) getEncoder() *json.Encoder  { return p.encoder }
 func (p *Player) setEncoder(e *json.Encoder) { p.encoder = e }
 func (p *Player) clearEncoder()              { p.encoder = nil }
 
-func (p *Player) getGold() int  { return p.stats.currentHp }
-func (p *Player) setGold(g int) { p.gold = g }
+func (p *Player) getGold() int { return p.stats.currentHp }
 func (p *Player) adjustGold(g int) {
 	p.gold += g
 	if p.gold <= 0 {
@@ -383,9 +390,8 @@ func (p *Player) killPlayer() {
 	p.lootable = true
 }
 
-func (p *Player) getHp() int   { return p.stats.currentHp }
-func (p *Player) setHp(hp int) { p.stats.currentHp = hp }
-func (p *Player) resetHp()     { p.stats.currentHp = p.stats.maxHp }
+func (p *Player) getHp() int { return p.stats.currentHp }
+func (p *Player) resetHp()   { p.stats.currentHp = p.stats.maxHp }
 func (p *Player) adjustHp(hp int) {
 	p.stats.currentHp += hp
 	if p.stats.currentHp <= 0 {
@@ -395,9 +401,8 @@ func (p *Player) adjustHp(hp int) {
 	}
 }
 
-func (p *Player) getSp() int   { return p.stats.currentSp }
-func (p *Player) setSp(sp int) { p.stats.currentSp = sp }
-func (p *Player) resetSp()     { p.stats.currentSp = p.stats.maxSp }
+func (p *Player) getSp() int { return p.stats.currentSp }
+func (p *Player) resetSp()   { p.stats.currentSp = p.stats.maxSp }
 func (p *Player) adjustSp(sp int) {
 	p.stats.currentSp += sp
 	if p.stats.currentSp <= 0 {
@@ -407,8 +412,16 @@ func (p *Player) adjustSp(sp int) {
 
 func newPlayer(conn net.Conn, name string) Player {
 	return Player{id: rand.Int(), // TODO Check for collisions,
-		conn: conn, name: name, class: Novice, location: 0, level: 1, stats: Stats{
+		stats: Stats{
 			currentHp: 10,
 			maxHp:     10,
-		}}
+			hit:       1,
+			attack:    1,
+		},
+		conn:     conn,
+		name:     name,
+		class:    Novice,
+		location: 0,
+		level:    1,
+	}
 }
