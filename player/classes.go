@@ -47,7 +47,11 @@ type abilityModifier struct {
 type spellModifier struct {
 }
 
-// CLASS IMPLEMENTATIONS
+// CLASS IMPLEMENTATIONS -- TODO implement these via JSON
+var Novice = Class{
+	name: "Novice",
+}
+
 var Knight = Class{
 	name: "Knight",
 	skillModifier: skillModifier{

@@ -3,32 +3,52 @@ package player
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dHobbs17/rpgcmdutils/server"
 	"log"
+	"math/rand"
 	"net"
+	"reflect"
+	"strconv"
 	"strings"
 )
 
 type Player struct {
 	name         string
-	queuedAction *server.ServerMessage
+	queuedAction *PlayerMessage
 	conn         net.Conn
 	level        int
 	id           int
 	xp           int
 	idle         int
+	dead         bool
+	gold         int
+	lootable     bool
 	connected    bool
 	statPoints   int
 	class        Class
 	stats        Stats
 	skills       Skills
 	spells       []string
-	location     string
+	location     int
 	encoder      *json.Encoder
 	decoder      *json.Decoder
 	quests       []int
+	inventory    []string
+	equipment    equipment
+	loot         []string
 }
 
+type equipment struct {
+	helm      string
+	armor     string
+	leftHand  string
+	rightHand string
+	legs      string
+	boots     string
+	bracelet  string
+	gloves    string
+	ring1     string
+	ring2     string
+}
 type Stats struct {
 	currentHp    int
 	currentSp    int
@@ -60,6 +80,7 @@ type Skills struct {
 	survival    int
 }
 type PlayerCommands int
+type PlayerEquipment int
 
 type PlayerMessage struct {
 	Action string
@@ -112,6 +133,45 @@ const (
 	HIDE
 	DISCONNECT // Disconnect must be last
 )
+
+const (
+	HELM PlayerEquipment = iota // Move must be first
+	ARMOR
+	LEGS
+	BOOTS
+	LEFT_HAND
+	RIGHT_HAND
+	GLOVES
+	BRACELET
+	RING1
+	RING2
+)
+
+const (
+	EQUIPMENT_HELM      = "helm"
+	EQUIPMENT_ARMOR     = "armor"
+	EQUIPMENT_BOOTS     = "boots"
+	EQUIPMENT_GLOVES    = "gloves"
+	EQUIPMENT_BRACELET  = "bracelet"
+	EQUIPMENT_LEGS      = "legs"
+	EQUIPMENT_RING1     = "ring1"
+	EQUIPMENT_RING2     = "ring2"
+	EQUIPMENT_LEFTHAND  = "lefthand"
+	EQUIPMENT_RIGHTHAND = "righthand"
+)
+
+var playerEquipment = map[PlayerEquipment]string{
+	HELM:       EQUIPMENT_HELM,
+	ARMOR:      EQUIPMENT_ARMOR,
+	LEGS:       EQUIPMENT_LEGS,
+	BOOTS:      EQUIPMENT_BOOTS,
+	BRACELET:   EQUIPMENT_BRACELET,
+	GLOVES:     EQUIPMENT_GLOVES,
+	LEFT_HAND:  EQUIPMENT_LEFTHAND,
+	RIGHT_HAND: EQUIPMENT_RIGHTHAND,
+	RING1:      EQUIPMENT_RING1,
+	RING2:      EQUIPMENT_RING2,
+}
 
 var playerOperations = map[PlayerCommands]string{
 	MOVE:       MOVE_OPERATION,
@@ -256,3 +316,99 @@ func (s PlayerCommands) String() string {
 type PlayerError struct{ Err error }
 
 func (e PlayerError) Error() string { return e.Err.Error() }
+
+// getters and setters
+func (p *Player) getConn() net.Conn    { return p.conn }
+func (p *Player) setConn(c net.Conn)   { p.conn = c }
+func (p *Player) clearConn(c net.Conn) { p.conn = c }
+
+func (p *Player) getConnected() bool  { return p.connected }
+func (p *Player) setConnected(b bool) { p.connected = b }
+
+func (p *Player) getIdle() int  { return p.id }
+func (p *Player) setIdle(i int) { p.id = i }
+
+func (p *Player) getId() int { return p.id }
+
+func (p *Player) getName() string { return p.name }
+
+func (p *Player) isLootable() bool { return p.lootable }
+func (p *Player) isAlive() bool    { return !p.dead }
+
+func (p *Player) getQueuedAction() *PlayerMessage  { return p.queuedAction }
+func (p *Player) setQueuedAction(a *PlayerMessage) { p.queuedAction = a }
+func (p *Player) clearQueuedAction()               { p.queuedAction = nil }
+
+func (p *Player) getEncoder() *json.Encoder  { return p.encoder }
+func (p *Player) setEncoder(e *json.Encoder) { p.encoder = e }
+func (p *Player) clearEncoder()              { p.encoder = nil }
+
+func (p *Player) getGold() int  { return p.stats.currentHp }
+func (p *Player) setGold(g int) { p.gold = g }
+func (p *Player) adjustGold(g int) {
+	p.gold += g
+	if p.gold <= 0 {
+		p.gold = 0
+	}
+}
+
+// TODO Add Loot IDs
+func (p *Player) addToInventory(loot string) {
+	p.inventory = append(p.inventory, loot)
+}
+
+// TODO Implement this
+//func (p *Player) dropFromInventory(loot string) {
+//	p.inventory = append(p.inventory, loot)
+//}
+
+func (p *Player) killPlayer() {
+	// add and drop inventory
+	p.loot = p.inventory
+	p.inventory = []string{}
+
+	// add and drop gold
+	p.loot = append(p.loot, strconv.Itoa(p.gold)+" gold")
+	p.gold = 0
+
+	// add and drop equipment
+	inv := reflect.ValueOf(p.equipment)
+	for i := 0; i < inv.NumField(); i++ {
+		p.loot = append(p.loot, inv.Field(i).String())
+	}
+	p.equipment = equipment{}
+
+	// mark dead and lootable
+	p.dead = true
+	p.lootable = true
+}
+
+func (p *Player) getHp() int   { return p.stats.currentHp }
+func (p *Player) setHp(hp int) { p.stats.currentHp = hp }
+func (p *Player) resetHp()     { p.stats.currentHp = p.stats.maxHp }
+func (p *Player) adjustHp(hp int) {
+	p.stats.currentHp += hp
+	if p.stats.currentHp <= 0 {
+		p.stats.currentHp = 0
+		p.dead = true
+		p.lootable = true
+	}
+}
+
+func (p *Player) getSp() int   { return p.stats.currentSp }
+func (p *Player) setSp(sp int) { p.stats.currentSp = sp }
+func (p *Player) resetSp()     { p.stats.currentSp = p.stats.maxSp }
+func (p *Player) adjustSp(sp int) {
+	p.stats.currentSp += sp
+	if p.stats.currentSp <= 0 {
+		p.stats.currentSp = 0
+	}
+}
+
+func newPlayer(conn net.Conn, name string) Player {
+	return Player{id: rand.Int(), // TODO Check for collisions,
+		conn: conn, name: name, class: Novice, location: 0, level: 1, stats: Stats{
+			currentHp: 10,
+			maxHp:     10,
+		}}
+}
