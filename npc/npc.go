@@ -161,7 +161,7 @@ func (n *Npc) GetHp() int { return n.stats.currentHp }
 
 func (n *Npc) AdjustHp(hp int) {
 	n.stats.currentHp += hp
-	if n.stats.currentSp <= 0 {
+	if n.stats.currentHp <= 0 {
 		n.stats.currentHp = 0
 		n.dead = true
 		n.lootable = true
