@@ -62,6 +62,7 @@ type ServerMessage struct {
 	Data   string
 	Args   []string
 }
+
 type InitializeConnection struct {
 	Action   string
 	Data     string

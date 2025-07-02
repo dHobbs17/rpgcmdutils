@@ -93,6 +93,12 @@ type PlayerMessage struct {
 	Args   []string
 }
 
+type PlayerContentMessage struct {
+	Action string
+	Data   Player
+	Args   []string
+}
+
 // Player Sends...
 const (
 	MOVE_OPERATION       string = "move"

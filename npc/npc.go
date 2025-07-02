@@ -8,6 +8,12 @@ import (
 type npcState int
 type npcAction int
 
+type NpcContentMessage struct {
+	Action string
+	Data   Npc
+	Args   []string
+}
+
 type Npc struct {
 	name         string
 	npcType      string
