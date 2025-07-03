@@ -473,7 +473,7 @@ func NewPlayer(conn net.Conn, name string) Player {
 			Attack:    1,
 		},
 		conn:     conn,
-		Name:     name,
+		name:     name,
 		class:    Novice,
 		location: 0,
 		level:    1,
