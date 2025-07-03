@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/dHobbs17/rpgcmdutils/common"
 	"github.com/dHobbs17/rpgcmdutils/player"
 	"net"
 )
@@ -58,10 +59,12 @@ const server_name string = "Dave's cool server"
 
 type serverCommands int
 
+// TODO implment dynamic/generic? types of data
 type ServerMessage struct {
 	Action string
-	Data   any
+	Data   string
 	Args   []string
+	Target common.Target
 }
 
 type InitializeConnection struct {
