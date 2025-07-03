@@ -363,9 +363,9 @@ func (p *Player) GetId() int { return p.id }
 
 func (p *Player) GetName() string { return p.name }
 
-func (p *Player) IsLootable() bool { return p.lootable }
-func (p *Player) IsAlive() bool    { return !p.dead }
-
+func (p *Player) IsLootable() bool                 { return p.lootable }
+func (p *Player) IsAlive() bool                    { return !p.dead }
+func (p *Player) IsPlayer() bool                   { return true }
 func (p *Player) GetQueuedAction() *common.Action  { return p.queuedAction }
 func (p *Player) SetQueuedAction(a *common.Action) { p.queuedAction = a }
 func (p *Player) ClearQueuedAction()               { p.queuedAction = nil }

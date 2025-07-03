@@ -11,6 +11,7 @@ type npcAction int
 type Npc struct {
 	name         string
 	npcType      string
+	isPlayer     bool
 	monsterId    monsterId
 	level        int
 	id           int
@@ -124,8 +125,9 @@ func (n *Npc) GetState() npcState  { return n.state }
 func (n *Npc) SetState(s npcState) { n.state = s }
 func (n *Npc) ResetState()         { n.state = n.defaultState }
 
-func (n *Npc) GetHp() int    { return n.stats.CurrentHp }
-func (n *Npc) GetMaxHp() int { return n.stats.MaxHp }
+func (n *Npc) GetHp() int     { return n.stats.CurrentHp }
+func (n *Npc) GetMaxHp() int  { return n.stats.MaxHp }
+func (p *Npc) IsPlayer() bool { return false }
 
 func (n *Npc) AdjustHp(hp int) {
 	n.stats.CurrentHp += hp

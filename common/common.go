@@ -17,6 +17,7 @@ type NpcPlayer interface {
 	GetCurrentHp() int
 	GetMaxHp() int
 	GetCurrentSp() int
+	IsPlayer() bool
 	GetMaxSp() int
 }
 
@@ -26,11 +27,17 @@ func GetTarget(np NpcPlayer) *NpcPlayer {
 func Get(np NpcPlayer) *NpcPlayer {
 	return &np
 }
+func GetType(np NpcPlayer) *NpcPlayer {
+	return &np
+}
 func GetId(np NpcPlayer) int {
 	return np.GetId()
 }
 func GetLevel(np NpcPlayer) int {
 	return np.GetLevel()
+}
+func IsPlayer(np NpcPlayer) bool {
+	return np.IsPlayer()
 }
 func GetAction(np NpcPlayer) Action {
 	return np.getAction()
