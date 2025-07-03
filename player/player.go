@@ -13,7 +13,7 @@ import (
 )
 
 type Player struct {
-	name         string
+	Name         string
 	queuedAction *common.Action
 	conn         net.Conn
 	level        int
