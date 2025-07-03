@@ -13,34 +13,6 @@ import (
 )
 
 type Player struct {
-	name         string
-	queuedAction *common.Action
-	conn         net.Conn
-	level        int
-	id           int
-	xp           int
-	idle         int
-	dead         bool
-	gold         int
-	lootable     bool
-	connected    bool
-	target       *common.NpcPlayer
-	statPoints   int
-	class        Class
-	stats        common.Stats
-	inCombat     bool
-	skills       common.Skills
-	spells       []string
-	location     int
-	encoder      *json.Encoder
-	decoder      *json.Decoder
-	quests       []int
-	inventory    []string
-	equipment    equipment
-	loot         []string
-}
-
-type PlayerPublic struct {
 	Name         string
 	QueuedAction *common.Action
 	Conn         net.Conn
@@ -57,6 +29,7 @@ type PlayerPublic struct {
 	Class        Class
 	Stats        common.Stats
 	InCombat     bool
+	IsPlayer     bool
 	Skills       common.Skills
 	Spells       []string
 	Location     int
@@ -80,38 +53,7 @@ type equipment struct {
 	ring1     string
 	ring2     string
 }
-type Stats struct {
-	currentHp    int
-	currentSp    int
-	maxHp        int
-	maxSp        int
-	morale       int
-	hit          int
-	attack       int
-	dodge        int
-	parry        int
-	block        int
-	intelligence int
-	strength     int
-	dexterity    int
-	notoriety    int
-}
 
-type Skills struct {
-	destruction int
-	conjuration int
-	illusion    int
-	perception  int
-	deception   int
-	stealth     int
-	swords      int
-	maces       int
-	axes        int
-	ranged      int
-	wands       int
-	block       int
-	survival    int
-}
 type PlayerCommands int
 type PlayerEquipment int
 
@@ -127,47 +69,47 @@ type PlayerContentMessage struct {
 	Args   []string
 }
 
-func (m PlayerContentMessage) MarshalJSON() ([]byte, error) {
-	j, err := json.Marshal(struct {
-		Action string
-		Data   PlayerPublic
-		Args   []string
-	}{
-		Action: m.Action,
-		Data: PlayerPublic{
-			Name:         m.Data.name,
-			QueuedAction: m.Data.queuedAction,
-			Conn:         m.Data.conn,
-			Level:        m.Data.level,
-			Id:           m.Data.id,
-			Xp:           m.Data.xp,
-			Idle:         m.Data.idle,
-			Dead:         m.Data.dead,
-			Gold:         m.Data.gold,
-			Lootable:     m.Data.lootable,
-			Connected:    m.Data.connected,
-			Target:       m.Data.target,
-			StatPoints:   m.Data.statPoints,
-			Class:        m.Data.class,
-			Stats:        m.Data.stats,
-			InCombat:     m.Data.inCombat,
-			Skills:       m.Data.skills,
-			Spells:       m.Data.spells,
-			Location:     m.Data.location,
-			Encoder:      m.Data.encoder,
-			Decoder:      m.Data.decoder,
-			Quests:       m.Data.quests,
-			Inventory:    m.Data.inventory,
-			Equipment:    m.Data.equipment,
-			Loot:         m.Data.loot,
-		},
-		Args: m.Args,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return j, nil
-}
+//func (m PlayerContentMessage) MarshalJSON() ([]byte, error) {
+//	j, err := json.Marshal(struct {
+//		Action string
+//		Data   Player
+//		Args   []string
+//	}{
+//		Action: m.Action,
+//		Data: Player{
+//			Name:         m.Data.name,
+//			QueuedAction: m.Data.queuedAction,
+//			Conn:         m.Data.conn,
+//			Level:        m.Data.level,
+//			Id:           m.Data.id,
+//			Xp:           m.Data.xp,
+//			Idle:         m.Data.idle,
+//			Dead:         m.Data.dead,
+//			Gold:         m.Data.gold,
+//			Lootable:     m.Data.lootable,
+//			Connected:    m.Data.connected,
+//			Target:       m.Data.target,
+//			StatPoints:   m.Data.statPoints,
+//			Class:        m.Data.class,
+//			Stats:        m.Data.stats,
+//			InCombat:     m.Data.inCombat,
+//			Skills:       m.Data.skills,
+//			Spells:       m.Data.spells,
+//			Location:     m.Data.location,
+//			Encoder:      m.Data.encoder,
+//			Decoder:      m.Data.decoder,
+//			Quests:       m.Data.quests,
+//			Inventory:    m.Data.inventory,
+//			Equipment:    m.Data.equipment,
+//			Loot:         m.Data.loot,
+//		},
+//		Args: m.Args,
+//	})
+//	if err != nil {
+//		return nil, err
+//	}
+//	return j, nil
+//}
 
 // Player Sends...
 const (
@@ -406,57 +348,59 @@ type PlayerError struct{ Err error }
 func (e PlayerError) Error() string { return e.Err.Error() }
 
 // getters and setters
-func (p *Player) Get() Player        { return *p }
-func (p *Player) GetConn() net.Conn  { return p.conn }
-func (p *Player) SetConn(c net.Conn) { p.conn = c }
+//func (p *Player) Get() Player { return *p }
+
+// func (p *Player) GetConn() net.Conn  { return p.conn }
+// func (p *Player) SetConn(c net.Conn) { p.conn = c }
 func (p *Player) ClearConn() {
-	p.conn.Close()
-	p.conn = nil
+	p.Conn.Close()
+	p.Conn = nil
 }
 
-func (p *Player) GetConnected() bool  { return p.connected }
-func (p *Player) SetConnected(b bool) { p.connected = b }
+//func (p *Player) GetConnected() bool  { return p.connected }
+//func (p *Player) SetConnected(b bool) { p.connected = b }
 
-func (p *Player) GetIdle() int { return p.idle }
+// func (p *Player) GetIdle() int { return p.idle }
 func (p *Player) AdjustIdle(i int) {
-	p.idle += i
-	if p.idle <= 0 {
-		p.idle = 0
+	p.Idle += i
+	if p.Idle <= 0 {
+		p.Idle = 0
 	}
 }
-func (p *Player) SetIdle(i int)  { p.idle = i }
-func (p *Player) GetLevel() int  { return p.level }
-func (p *Player) GetHit() int    { return p.stats.Hit }
-func (p *Player) GetAttack() int { return p.stats.Attack }
 
-func (p *Player) GetId() int { return p.id }
+//func (p *Player) SetIdle(i int)  { p.idle = i }
+//func (p *Player) GetLevel() int  { return p.level }
+//func (p *Player) GetHit() int    { return p.stats.Hit }
+//func (p *Player) GetAttack() int { return p.stats.Attack }
+//
+//func (p *Player) GetId() int { return p.id }
+//
+//func (p *Player) GetName() string { return p.name }
 
-func (p *Player) GetName() string { return p.name }
+//func (p *Player) IsLootable() bool                 { return p.lootable }
+//func (p *Player) IsAlive() bool                    { return !p.dead }
+//func (p *Player) IsPlayer() bool                   { return true }
+//func (p *Player) GetQueuedAction() *common.Action  { return p.queuedAction }
+//func (p *Player) SetQueuedAction(a *common.Action) { p.queuedAction = a }
+//func (p *Player) ClearQueuedAction()               { p.queuedAction = nil }
 
-func (p *Player) IsLootable() bool                 { return p.lootable }
-func (p *Player) IsAlive() bool                    { return !p.dead }
-func (p *Player) IsPlayer() bool                   { return true }
-func (p *Player) GetQueuedAction() *common.Action  { return p.queuedAction }
-func (p *Player) SetQueuedAction(a *common.Action) { p.queuedAction = a }
-func (p *Player) ClearQueuedAction()               { p.queuedAction = nil }
+// func (p *Player) GetEncoder() *json.Encoder  { return p.encoder }
+// func (p *Player) SetEncoder(e *json.Encoder) { p.encoder = e }
+func (p *Player) ClearEncoder()   { p.Encoder = nil }
+func (p *Player) CalcHit() int    { return p.Stats.Hit }
+func (p *Player) CalcDamage() int { return p.Stats.Attack }
 
-func (p *Player) GetEncoder() *json.Encoder  { return p.encoder }
-func (p *Player) SetEncoder(e *json.Encoder) { p.encoder = e }
-func (p *Player) ClearEncoder()              { p.encoder = nil }
-func (p *Player) CalcHit() int               { return p.stats.Hit }
-func (p *Player) CalcDamage() int            { return p.stats.Attack }
-
-func (p *Player) GetGold() int { return p.stats.CurrentHp }
+// func (p *Player) GetGold() int { return p.stats.CurrentHp }
 func (p *Player) AdjustGold(g int) {
-	p.gold += g
-	if p.gold <= 0 {
-		p.gold = 0
+	p.Gold += g
+	if p.Gold <= 0 {
+		p.Gold = 0
 	}
 }
 
 // TODO Add Loot IDs
 func (p *Player) AddToInventory(loot string) {
-	p.inventory = append(p.inventory, loot)
+	p.Inventory = append(p.Inventory, loot)
 }
 
 // TODO Implement this
@@ -466,72 +410,72 @@ func (p *Player) AddToInventory(loot string) {
 
 func (p *Player) KillPlayer() {
 	// add and drop inventory
-	p.loot = p.inventory
-	p.inventory = []string{}
+	p.Loot = p.Inventory
+	p.Inventory = []string{}
 
 	// add and drop gold
-	p.loot = append(p.loot, strconv.Itoa(p.gold)+" gold")
-	p.gold = 0
+	p.Loot = append(p.Loot, strconv.Itoa(p.Gold)+" gold")
+	p.Gold = 0
 
 	// add and drop equipment
-	inv := reflect.ValueOf(p.equipment)
+	inv := reflect.ValueOf(p.Equipment)
 	for i := 0; i < inv.NumField(); i++ {
-		p.loot = append(p.loot, inv.Field(i).String())
+		p.Loot = append(p.Loot, inv.Field(i).String())
 	}
-	p.equipment = equipment{}
+	p.Equipment = equipment{}
 
 	// mark dead and lootable
-	p.dead = true
-	p.lootable = true
+	p.Dead = true
+	p.Lootable = true
 }
 
-func (p *Player) GetHp() int    { return p.stats.CurrentHp }
-func (p *Player) GetMaxHp() int { return p.stats.MaxHp }
-func (p *Player) ResetHp()      { p.stats.CurrentHp = p.stats.MaxHp }
+func (p *Player) ResetHp() { p.Stats.CurrentHp = p.Stats.MaxHp }
 func (p *Player) AdjustHp(hp int) {
-	p.stats.CurrentHp += hp
-	if p.stats.CurrentHp <= 0 {
-		p.stats.CurrentHp = 0
-		p.dead = true
-		p.lootable = true
+	p.Stats.CurrentHp += hp
+	if p.Stats.CurrentHp <= 0 {
+		p.Stats.CurrentHp = 0
+		p.Dead = true
+		p.Lootable = true
 	}
 }
-func (p *Player) IsInCombat() bool { return p.inCombat }
-func (p *Player) SetCombat(c bool) { p.inCombat = c }
 
-func (p *Player) GetTarget() *common.NpcPlayer       { return p.target }
-func (p *Player) SetTarget(target *common.NpcPlayer) { p.target = target }
-func (p *Player) ResetTarget()                       { p.target = nil }
+//func (p *Player) IsInCombat() bool { return p.inCombat }
+//func (p *Player) SetCombat(c bool) { p.inCombat = c }
 
-func (p *Player) GetReputation() int     { return p.stats.Reputation }
-func (p *Player) SetReputation(n int)    { p.stats.Reputation = n }
-func (p *Player) AdjustReputation(n int) { p.stats.Reputation += n }
+func (p *Player) GetTarget() *common.NpcPlayer       { return p.Target }
+func (p *Player) SetTarget(target *common.NpcPlayer) { p.Target = target }
+func (p *Player) ResetTarget()                       { p.Target = nil }
 
-func (p *Player) GetStats() common.Stats   { return p.stats }
-func (p *Player) GetSkills() common.Skills { return p.skills }
+func (p *Player) GetReputation() int     { return p.Stats.Reputation }
+func (p *Player) SetReputation(n int)    { p.Stats.Reputation = n }
+func (p *Player) AdjustReputation(n int) { p.Stats.Reputation += n }
 
-func (p *Player) GetSp() int    { return p.stats.CurrentSp }
-func (p *Player) GetMaxSp() int { return p.stats.MaxSp }
-func (p *Player) ResetSp()      { p.stats.CurrentSp = p.stats.MaxSp }
+func (p *Player) GetStats() common.Stats   { return p.Stats }
+func (p *Player) GetSkills() common.Skills { return p.Skills }
+
+func (p *Player) GetSp() int    { return p.Stats.CurrentSp }
+func (p *Player) GetMaxSp() int { return p.Stats.MaxSp }
+func (p *Player) ResetSp()      { p.Stats.CurrentSp = p.Stats.MaxSp }
 func (p *Player) AdjustSp(sp int) {
-	p.stats.CurrentSp += sp
-	if p.stats.CurrentSp <= 0 {
-		p.stats.CurrentSp = 0
+	p.Stats.CurrentSp += sp
+	if p.Stats.CurrentSp <= 0 {
+		p.Stats.CurrentSp = 0
 	}
 }
 
 func NewPlayer(conn net.Conn, name string) Player {
-	return Player{id: rand.Int(), // TODO Check for collisions,
-		stats: common.Stats{
+	return Player{Id: rand.Int(), // TODO Check for collisions,
+		Stats: common.Stats{
 			CurrentHp: 10,
 			MaxHp:     10,
 			Hit:       1,
 			Attack:    1,
 		},
-		conn:     conn,
-		name:     name,
-		class:    Novice,
-		location: 0,
-		level:    1,
+		IsPlayer: true,
+		Conn:     conn,
+		Name:     name,
+		Class:    Novice,
+		Location: 0,
+		Level:    1,
 	}
 }
