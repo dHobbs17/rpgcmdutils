@@ -463,6 +463,20 @@ func (p *Player) AdjustSp(sp int) {
 	}
 }
 
+func (p *Player) ToTarget() *common.Target {
+	return &common.Target{
+		Name:       p.Name,
+		TargetType: p.Class.name,
+		Id:         p.Id,
+		Action:     p.QueuedAction,
+		CurrentHp:  p.Stats.CurrentHp,
+		CurrentSp:  p.Stats.CurrentSp,
+		MaxHp:      p.Stats.MaxHp,
+		MaxSp:      p.Stats.MaxSp,
+		IsPlayer:   p.IsPlayer,
+	}
+}
+
 func NewPlayer(conn net.Conn, name string) Player {
 	return Player{Id: rand.Int(), // TODO Check for collisions,
 		Stats: common.Stats{

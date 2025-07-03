@@ -16,11 +16,12 @@ type Target struct {
 	Name       string
 	TargetType string
 	Id         int
-	Action     Action
-	currentHp  int
-	maxHp      int
-	currentSp  int
-	maxSp      int
+	Action     *Action
+	CurrentHp  int
+	MaxHp      int
+	CurrentSp  int
+	MaxSp      int
+	IsPlayer   bool
 }
 
 type Stats struct {

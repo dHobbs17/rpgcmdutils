@@ -158,6 +158,20 @@ func (n *Npc) AdjustSp(sp int) {
 	}
 }
 
+func (n *Npc) ToTarget() *common.Target {
+	return &common.Target{
+		Name:       n.Name,
+		TargetType: n.NpcType,
+		Id:         n.Id,
+		Action:     n.QueuedAction,
+		CurrentHp:  n.Stats.CurrentHp,
+		CurrentSp:  n.Stats.CurrentSp,
+		MaxHp:      n.Stats.MaxHp,
+		MaxSp:      n.Stats.MaxSp,
+		IsPlayer:   n.IsPlayer,
+	}
+}
+
 func (n *Npc) GetDialogGreeting() string { return getDialog(DIALOG_GREET, n) }
 func (n *Npc) GetDialogDeath() string    { return getDialog(DIALOG_DEATH, n) }
 func (n *Npc) GetDialogAttack() string   { return getDialog(DIALOG_ATTACK, n) }
