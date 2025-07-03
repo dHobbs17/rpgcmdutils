@@ -362,6 +362,7 @@ func (p *Player) GetAttack() int { return p.stats.Attack }
 func (p *Player) GetId() int { return p.id }
 
 func (p *Player) GetName() string { return p.name }
+func (p Player) GetName2() string { return p.name }
 
 func (p *Player) IsLootable() bool                 { return p.lootable }
 func (p *Player) IsAlive() bool                    { return !p.dead }
