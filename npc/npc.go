@@ -8,12 +8,6 @@ import (
 type npcState int
 type npcAction int
 
-type NpcContentMessage struct {
-	Action string
-	Data   Npc
-	Args   []string
-}
-
 type Npc struct {
 	name         string
 	npcType      string
@@ -28,7 +22,7 @@ type Npc struct {
 	location     string
 	dialog       npcDialogs
 	state        npcState
-	target       *int
+	target       *common.NpcPlayer
 	actions      []npcAction
 	passive      bool
 	defaultState npcState
@@ -111,6 +105,7 @@ var NpcStates = map[npcAction]string{
 }
 
 // getters and setters
+func (n *Npc) Get() *Npc                 { return n }
 func (n *Npc) GetName() string           { return n.name }
 func (n *Npc) GetPossibleLoot() []string { return n.possibleLoot }
 func (n *Npc) GetNpcType() string        { return n.npcType }
@@ -129,7 +124,8 @@ func (n *Npc) GetState() npcState  { return n.state }
 func (n *Npc) SetState(s npcState) { n.state = s }
 func (n *Npc) ResetState()         { n.state = n.defaultState }
 
-func (n *Npc) GetHp() int { return n.stats.CurrentHp }
+func (n *Npc) GetHp() int    { return n.stats.CurrentHp }
+func (n *Npc) GetMaxHp() int { return n.stats.MaxHp }
 
 func (n *Npc) AdjustHp(hp int) {
 	n.stats.CurrentHp += hp
@@ -146,14 +142,14 @@ func (n *Npc) GetMonsterId() monsterId { return n.monsterId }
 
 func (n *Npc) GetId() int { return n.id }
 
-func (n *Npc) GetTarget() *int          { return n.target }
-func (n *Npc) SetTarget(targetsId *int) { n.target = targetsId }
-func (n *Npc) ResetTarget()             { n.target = nil }
+func (n *Npc) GetTarget() *common.NpcPlayer       { return n.target }
+func (n *Npc) SetTarget(target *common.NpcPlayer) { n.target = target }
+func (n *Npc) ResetTarget()                       { n.target = nil }
 
-func (n *Npc) GetSp() int   { return n.stats.CurrentSp }
-func (n *Npc) SetSp(sp int) { n.stats.CurrentSp = sp }
-func (n *Npc) ResetSp()     { n.stats.CurrentSp = n.stats.MaxSp }
-
+func (n *Npc) GetSp() int    { return n.stats.CurrentSp }
+func (n *Npc) SetSp(sp int)  { n.stats.CurrentSp = sp }
+func (n *Npc) ResetSp()      { n.stats.CurrentSp = n.stats.MaxSp }
+func (n *Npc) GetMaxSp() int { return n.stats.MaxSp }
 func (n *Npc) AdjustSp(sp int) {
 	n.stats.CurrentSp += sp
 	if n.stats.CurrentSp <= 0 {

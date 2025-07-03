@@ -24,7 +24,7 @@ type Player struct {
 	gold         int
 	lootable     bool
 	connected    bool
-	target       *int
+	target       *common.NpcPlayer
 	statPoints   int
 	class        Class
 	stats        common.Stats
@@ -336,6 +336,7 @@ type PlayerError struct{ Err error }
 func (e PlayerError) Error() string { return e.Err.Error() }
 
 // getters and setters
+func (p *Player) Get() *Player       { return p }
 func (p *Player) GetConn() net.Conn  { return p.conn }
 func (p *Player) SetConn(c net.Conn) { p.conn = c }
 func (p *Player) ClearConn() {
@@ -353,8 +354,8 @@ func (p *Player) AdjustIdle(i int) {
 		p.idle = 0
 	}
 }
-func (p *Player) SetIdle(i int) { p.idle = i }
-
+func (p *Player) SetIdle(i int)  { p.idle = i }
+func (p *Player) GetLevel() int  { return p.level }
 func (p *Player) GetHit() int    { return p.stats.Hit }
 func (p *Player) GetAttack() int { return p.stats.Attack }
 
@@ -414,8 +415,9 @@ func (p *Player) KillPlayer() {
 	p.lootable = true
 }
 
-func (p *Player) GetHp() int { return p.stats.CurrentHp }
-func (p *Player) ResetHp()   { p.stats.CurrentHp = p.stats.MaxHp }
+func (p *Player) GetHp() int    { return p.stats.CurrentHp }
+func (p *Player) GetMaxHp() int { return p.stats.MaxHp }
+func (p *Player) ResetHp()      { p.stats.CurrentHp = p.stats.MaxHp }
 func (p *Player) AdjustHp(hp int) {
 	p.stats.CurrentHp += hp
 	if p.stats.CurrentHp <= 0 {
@@ -427,9 +429,9 @@ func (p *Player) AdjustHp(hp int) {
 func (p *Player) IsInCombat() bool { return p.inCombat }
 func (p *Player) SetCombat(c bool) { p.inCombat = c }
 
-func (p *Player) GetTarget() *int          { return p.target }
-func (p *Player) SetTarget(targetsId *int) { p.target = targetsId }
-func (p *Player) ResetTarget()             { p.target = nil }
+func (p *Player) GetTarget() *common.NpcPlayer       { return p.target }
+func (p *Player) SetTarget(target *common.NpcPlayer) { p.target = target }
+func (p *Player) ResetTarget()                       { p.target = nil }
 
 func (p *Player) GetReputation() int     { return p.stats.Reputation }
 func (p *Player) SetReputation(n int)    { p.stats.Reputation = n }
@@ -438,8 +440,9 @@ func (p *Player) AdjustReputation(n int) { p.stats.Reputation += n }
 func (p *Player) GetStats() common.Stats   { return p.stats }
 func (p *Player) GetSkills() common.Skills { return p.skills }
 
-func (p *Player) GetSp() int { return p.stats.CurrentSp }
-func (p *Player) ResetSp()   { p.stats.CurrentSp = p.stats.MaxSp }
+func (p *Player) GetSp() int    { return p.stats.CurrentSp }
+func (p *Player) GetMaxSp() int { return p.stats.MaxSp }
+func (p *Player) ResetSp()      { p.stats.CurrentSp = p.stats.MaxSp }
 func (p *Player) AdjustSp(sp int) {
 	p.stats.CurrentSp += sp
 	if p.stats.CurrentSp <= 0 {
