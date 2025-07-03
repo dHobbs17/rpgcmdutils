@@ -336,7 +336,7 @@ type PlayerError struct{ Err error }
 func (e PlayerError) Error() string { return e.Err.Error() }
 
 // getters and setters
-func (p *Player) Get() *Player       { return p }
+func (p *Player) Get() Player        { return *p }
 func (p *Player) GetConn() net.Conn  { return p.conn }
 func (p *Player) SetConn(c net.Conn) { p.conn = c }
 func (p *Player) ClearConn() {

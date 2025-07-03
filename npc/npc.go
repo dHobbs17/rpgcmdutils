@@ -106,7 +106,7 @@ var NpcStates = map[npcAction]string{
 }
 
 // getters and setters
-func (n *Npc) Get() *Npc                 { return n }
+func (n *Npc) Get() Npc                  { return *n }
 func (n *Npc) GetName() string           { return n.name }
 func (n *Npc) GetPossibleLoot() []string { return n.possibleLoot }
 func (n *Npc) GetNpcType() string        { return n.npcType }
