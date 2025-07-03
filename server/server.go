@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/dHobbs17/rpgcmdutils/player"
 	"net"
 )
 
@@ -64,12 +65,12 @@ type ServerMessage struct {
 }
 
 type InitializeConnection struct {
-	Action   string
-	Data     string
-	Conn     net.Conn
-	Err      error
-	Username string
-	Encoder  *json.Encoder
+	Action  string
+	Data    string
+	Conn    net.Conn
+	Err     error
+	Player  *player.Player
+	Encoder *json.Encoder
 }
 
 func (s ServerMessage) String() string {
