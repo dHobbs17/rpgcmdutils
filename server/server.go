@@ -69,7 +69,7 @@ type InitializeConnection struct {
 	Data    string
 	Conn    net.Conn
 	Err     error
-	Player  player.Player
+	Player  *player.Player
 	Encoder *json.Encoder
 }
 
