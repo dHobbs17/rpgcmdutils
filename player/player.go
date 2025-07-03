@@ -40,6 +40,34 @@ type Player struct {
 	loot         []string
 }
 
+type PlayerPublic struct {
+	Name         string
+	QueuedAction *common.Action
+	Conn         net.Conn
+	Level        int
+	Id           int
+	Xp           int
+	Idle         int
+	Dead         bool
+	Gold         int
+	Lootable     bool
+	Connected    bool
+	Target       *common.NpcPlayer
+	StatPoints   int
+	Class        Class
+	Stats        common.Stats
+	InCombat     bool
+	Skills       common.Skills
+	Spells       []string
+	Location     int
+	Encoder      *json.Encoder
+	Decoder      *json.Decoder
+	Quests       []int
+	Inventory    []string
+	Equipment    equipment
+	Loot         []string
+}
+
 type equipment struct {
 	helm      string
 	armor     string
@@ -101,11 +129,39 @@ type PlayerContentMessage struct {
 
 func (m PlayerContentMessage) MarshalJSON() ([]byte, error) {
 	j, err := json.Marshal(struct {
-		Name  string
-		Level int
+		Action string
+		Data   PlayerPublic
+		Args   []string
 	}{
-		Name:  m.Data.GetName(),
-		Level: m.Data.GetLevel(),
+		Action: m.Action,
+		Data: PlayerPublic{
+			Name:         m.Data.name,
+			QueuedAction: m.Data.queuedAction,
+			Conn:         m.Data.conn,
+			Level:        m.Data.level,
+			Id:           m.Data.id,
+			Xp:           m.Data.xp,
+			Idle:         m.Data.idle,
+			Dead:         m.Data.dead,
+			Gold:         m.Data.gold,
+			Lootable:     m.Data.lootable,
+			Connected:    m.Data.connected,
+			Target:       m.Data.target,
+			StatPoints:   m.Data.statPoints,
+			Class:        m.Data.class,
+			Stats:        m.Data.stats,
+			InCombat:     m.Data.inCombat,
+			Skills:       m.Data.skills,
+			Spells:       m.Data.spells,
+			Location:     m.Data.location,
+			Encoder:      m.Data.encoder,
+			Decoder:      m.Data.decoder,
+			Quests:       m.Data.quests,
+			Inventory:    m.Data.inventory,
+			Equipment:    m.Data.equipment,
+			Loot:         m.Data.loot,
+		},
+		Args: m.Args,
 	})
 	if err != nil {
 		return nil, err
