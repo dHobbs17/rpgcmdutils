@@ -60,7 +60,7 @@ type serverCommands int
 
 type ServerMessage struct {
 	Action string
-	Data   string
+	Data   any
 	Args   []string
 }
 
@@ -71,10 +71,6 @@ type InitializeConnection struct {
 	Err     error
 	Player  player.Player
 	Encoder *json.Encoder
-}
-
-func (s ServerMessage) String() string {
-	return s.Action + ":" + s.Data
 }
 
 func (s InitializeConnection) String() string {
