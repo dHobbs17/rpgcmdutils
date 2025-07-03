@@ -1,64 +1,26 @@
 package common
 
-type ContentMessage struct {
+type TargetContentMessage struct {
 	Action string
-	Data   NpcPlayer
+	Data   Target
 	Args   []string
 }
 
-type NpcPlayer interface {
-	GetTarget() *NpcPlayer
-	Get() *NpcPlayer
-	GetLevel() int
-	GetId() int
-	GetStats() Stats
-	getAction() Action
-	GetSkills() Skills
-	GetCurrentHp() int
-	GetMaxHp() int
-	GetCurrentSp() int
-	IsPlayer() bool
-	GetMaxSp() int
+type TargetMessage struct {
+	Action string
+	Data   string
+	Args   []string
 }
 
-func GetTarget(np NpcPlayer) *NpcPlayer {
-	return np.GetTarget()
-}
-func Get(np NpcPlayer) *NpcPlayer {
-	return &np
-}
-func GetType(np NpcPlayer) *NpcPlayer {
-	return &np
-}
-func GetId(np NpcPlayer) int {
-	return np.GetId()
-}
-func GetLevel(np NpcPlayer) int {
-	return np.GetLevel()
-}
-func IsPlayer(np NpcPlayer) bool {
-	return np.IsPlayer()
-}
-func GetAction(np NpcPlayer) Action {
-	return np.getAction()
-}
-func GetSkills(np NpcPlayer) Skills {
-	return np.GetSkills()
-}
-func GetStats(np NpcPlayer) Stats {
-	return np.GetStats()
-}
-func GetCurrentHp(np NpcPlayer) int {
-	return np.GetCurrentHp()
-}
-func GetCurrentSp(np NpcPlayer) int {
-	return np.GetCurrentSp()
-}
-func GetMaxHp(np NpcPlayer) int {
-	return np.GetMaxHp()
-}
-func GetMaxSp(np NpcPlayer) int {
-	return np.GetMaxSp()
+type Target struct {
+	Name       string
+	TargetType string
+	Id         int
+	Action     Action
+	currentHp  int
+	maxHp      int
+	currentSp  int
+	maxSp      int
 }
 
 type Stats struct {

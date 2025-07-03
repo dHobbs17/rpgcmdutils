@@ -70,12 +70,13 @@ func (e MonsterError) Error() string { return e.Err.Error() }
 
 // MOB IMPLEMENTATIONS -- TODO implement these via JSON
 var Rat = Npc{
-	name:      RAT_NAME,
-	monsterId: RAT,
-	id:        rand.Int(), // TODO Check for collisions
-	npcType:   ANIMAL_NAME,
-	passive:   true,
-	stats: common.Stats{
+	Name:      RAT_NAME,
+	MonsterId: RAT,
+	Id:        rand.Int(), // TODO Check for collisions
+	NpcType:   ANIMAL_NAME,
+	IsPlayer:  false,
+	Passive:   true,
+	Stats: common.Stats{
 		MaxHp:        8,
 		CurrentHp:    8,
 		Morale:       2,
@@ -85,11 +86,11 @@ var Rat = Npc{
 		Strength:     1,
 		Dexterity:    4,
 	},
-	skills: common.Skills{
+	Skills: common.Skills{
 		Stealth:  4,
 		Survival: 4,
 	},
-	dialog: npcDialogs{
+	Dialog: npcDialogs{
 		GREETING: []string{"Rat lets out a piecing Screech", "Rat does a spin in anger"},
 		DEATH:    []string{"Rat falls to the ground dead", "Rats head explodes"},
 		WEAK:     []string{"Rat seems hurt", "Rats left arm has been severed"},
@@ -97,6 +98,6 @@ var Rat = Npc{
 		DAMAGE:   []string{"Rat has been damaged", "Rat shrugs off your weak attack"},
 		ATTACK:   []string{"Rat flails at you", "Rat jumps at you", "Rat attempts to bite you"},
 	},
-	possibleLoot: []string{"1 gold", "a half eaten apple", "a severed thumb"},
-	actions:      []npcAction{ATTACK, FLEE, HIDE, WAIT, MOVE},
+	PossibleLoot: []string{"1 gold", "a half eaten apple", "a severed thumb"},
+	Actions:      []npcAction{ATTACK, FLEE, HIDE, WAIT, MOVE},
 }

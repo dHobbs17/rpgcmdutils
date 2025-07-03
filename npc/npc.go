@@ -9,29 +9,29 @@ type npcState int
 type npcAction int
 
 type Npc struct {
-	name         string
-	npcType      string
-	isPlayer     bool
-	monsterId    monsterId
-	level        int
-	id           int
-	stats        common.Stats
-	queuedAction *common.Action
-	abilities    []string
-	spells       []string
-	skills       common.Skills
-	location     string
-	dialog       npcDialogs
-	state        npcState
-	target       *common.NpcPlayer
-	actions      []npcAction
-	passive      bool
-	defaultState npcState
-	lootable     bool
-	dead         bool
-	inCombat     bool
-	possibleLoot []string
-	loot         []string
+	Name         string
+	NpcType      string
+	IsPlayer     bool
+	MonsterId    monsterId
+	Level        int
+	Id           int
+	Stats        common.Stats
+	QueuedAction *common.Action
+	Abilities    []string
+	Spells       []string
+	Skills       common.Skills
+	Location     string
+	Dialog       npcDialogs
+	State        npcState
+	Target       *common.Target
+	Actions      []npcAction
+	Passive      bool
+	DefaultState npcState
+	Lootable     bool
+	Dead         bool
+	InCombat     bool
+	PossibleLoot []string
+	Loot         []string
 }
 
 // STATES
@@ -107,55 +107,54 @@ var NpcStates = map[npcAction]string{
 
 // getters and setters
 func (n *Npc) Get() Npc                  { return *n }
-func (n *Npc) GetName() string           { return n.name }
-func (n *Npc) GetPossibleLoot() []string { return n.possibleLoot }
-func (n *Npc) GetNpcType() string        { return n.npcType }
-func (n *Npc) GetLevel() int             { return n.level }
-func (n *Npc) IsLootable() bool          { return n.lootable }
-func (n *Npc) IsAlive() bool             { return !n.dead }
-func (n *Npc) IsPassive() bool           { return n.passive }
-func (n *Npc) IsInCombat() bool          { return n.inCombat }
-func (n *Npc) SetCombat(c bool)          { n.inCombat = c }
+func (n *Npc) GetName() string           { return n.Name }
+func (n *Npc) GetPossibleLoot() []string { return n.PossibleLoot }
+func (n *Npc) GetNpcType() string        { return n.NpcType }
+func (n *Npc) GetLevel() int             { return n.Level }
+func (n *Npc) IsLootable() bool          { return n.Lootable }
+func (n *Npc) IsAlive() bool             { return !n.Dead }
+func (n *Npc) IsPassive() bool           { return n.Passive }
+func (n *Npc) IsInCombat() bool          { return n.InCombat }
+func (n *Npc) SetCombat(c bool)          { n.InCombat = c }
 
-func (n *Npc) GetQueuedAction() *common.Action  { return n.queuedAction }
-func (n *Npc) SetQueuedAction(a *common.Action) { n.queuedAction = a }
-func (n *Npc) ClearQueuedAction()               { n.queuedAction = nil }
+func (n *Npc) GetQueuedAction() *common.Action  { return n.QueuedAction }
+func (n *Npc) SetQueuedAction(a *common.Action) { n.QueuedAction = a }
+func (n *Npc) ClearQueuedAction()               { n.QueuedAction = nil }
 
-func (n *Npc) GetState() npcState  { return n.state }
-func (n *Npc) SetState(s npcState) { n.state = s }
-func (n *Npc) ResetState()         { n.state = n.defaultState }
+func (n *Npc) GetState() npcState  { return n.State }
+func (n *Npc) SetState(s npcState) { n.State = s }
+func (n *Npc) ResetState()         { n.State = n.DefaultState }
 
-func (n *Npc) GetHp() int     { return n.stats.CurrentHp }
-func (n *Npc) GetMaxHp() int  { return n.stats.MaxHp }
-func (p *Npc) IsPlayer() bool { return false }
+func (n *Npc) GetHp() int    { return n.Stats.CurrentHp }
+func (n *Npc) GetMaxHp() int { return n.Stats.MaxHp }
 
 func (n *Npc) AdjustHp(hp int) {
-	n.stats.CurrentHp += hp
-	if n.stats.CurrentHp <= 0 {
-		n.stats.CurrentHp = 0
-		n.dead = true
-		n.lootable = true
+	n.Stats.CurrentHp += hp
+	if n.Stats.CurrentHp <= 0 {
+		n.Stats.CurrentHp = 0
+		n.Dead = true
+		n.Lootable = true
 	}
 }
 
-func (n *Npc) ResetHp() { n.stats.CurrentHp = n.stats.MaxHp }
+func (n *Npc) ResetHp() { n.Stats.CurrentHp = n.Stats.MaxHp }
 
-func (n *Npc) GetMonsterId() monsterId { return n.monsterId }
+func (n *Npc) GetMonsterId() monsterId { return n.MonsterId }
 
-func (n *Npc) GetId() int { return n.id }
+func (n *Npc) GetId() int { return n.Id }
 
-func (n *Npc) GetTarget() *common.NpcPlayer       { return n.target }
-func (n *Npc) SetTarget(target *common.NpcPlayer) { n.target = target }
-func (n *Npc) ResetTarget()                       { n.target = nil }
+func (n *Npc) GetTarget() *common.Target       { return n.Target }
+func (n *Npc) SetTarget(target *common.Target) { n.Target = target }
+func (n *Npc) ResetTarget()                    { n.Target = nil }
 
-func (n *Npc) GetSp() int    { return n.stats.CurrentSp }
-func (n *Npc) SetSp(sp int)  { n.stats.CurrentSp = sp }
-func (n *Npc) ResetSp()      { n.stats.CurrentSp = n.stats.MaxSp }
-func (n *Npc) GetMaxSp() int { return n.stats.MaxSp }
+func (n *Npc) GetSp() int    { return n.Stats.CurrentSp }
+func (n *Npc) SetSp(sp int)  { n.Stats.CurrentSp = sp }
+func (n *Npc) ResetSp()      { n.Stats.CurrentSp = n.Stats.MaxSp }
+func (n *Npc) GetMaxSp() int { return n.Stats.MaxSp }
 func (n *Npc) AdjustSp(sp int) {
-	n.stats.CurrentSp += sp
-	if n.stats.CurrentSp <= 0 {
-		n.stats.CurrentSp = 0
+	n.Stats.CurrentSp += sp
+	if n.Stats.CurrentSp <= 0 {
+		n.Stats.CurrentSp = 0
 	}
 }
 
@@ -165,29 +164,29 @@ func (n *Npc) GetDialogAttack() string   { return getDialog(DIALOG_ATTACK, n) }
 func (n *Npc) GetDialogDamage() string   { return getDialog(DIALOG_DAMAGE, n) }
 func (n *Npc) GetDialogWeak() string     { return getDialog(DIALOG_WEAK, n) }
 func (n *Npc) GetDialogRun() string      { return getDialog(DIALOG_RUN, n) }
-func (n *Npc) CalcHit() int              { return n.stats.Hit }
-func (n *Npc) CalcDamage() int           { return n.stats.Attack }
-func (n *Npc) GetLoot() []string         { return n.loot }
+func (n *Npc) CalcHit() int              { return n.Stats.Hit }
+func (n *Npc) CalcDamage() int           { return n.Stats.Attack }
+func (n *Npc) GetLoot() []string         { return n.Loot }
 
 func (n *Npc) generateLoot() {
-	n.loot = append(n.loot, n.possibleLoot[rand.IntN(len(n.possibleLoot)-1)])
+	n.Loot = append(n.Loot, n.PossibleLoot[rand.IntN(len(n.PossibleLoot)-1)])
 }
 
 func getDialog(dia monsterDialog, n *Npc) string {
 	switch dia {
 	case DIALOG_GREET:
-		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING)-1)]
+		return n.Dialog.GREETING[rand.IntN(len(n.Dialog.GREETING)-1)]
 	case DIALOG_DEATH:
-		return n.dialog.DEATH[rand.IntN(len(n.dialog.DEATH)-1)]
+		return n.Dialog.DEATH[rand.IntN(len(n.Dialog.DEATH)-1)]
 	case DIALOG_ATTACK:
-		return n.dialog.ATTACK[rand.IntN(len(n.dialog.ATTACK)-1)]
+		return n.Dialog.ATTACK[rand.IntN(len(n.Dialog.ATTACK)-1)]
 	case DIALOG_DAMAGE:
-		return n.dialog.DAMAGE[rand.IntN(len(n.dialog.DAMAGE)-1)]
+		return n.Dialog.DAMAGE[rand.IntN(len(n.Dialog.DAMAGE)-1)]
 	case DIALOG_WEAK:
-		return n.dialog.WEAK[rand.IntN(len(n.dialog.WEAK)-1)]
+		return n.Dialog.WEAK[rand.IntN(len(n.Dialog.WEAK)-1)]
 	case DIALOG_RUN:
-		return n.dialog.RUN[rand.IntN(len(n.dialog.RUN)-1)]
+		return n.Dialog.RUN[rand.IntN(len(n.Dialog.RUN)-1)]
 	default:
-		return n.dialog.GREETING[rand.IntN(len(n.dialog.GREETING)-1)]
+		return n.Dialog.GREETING[rand.IntN(len(n.Dialog.GREETING)-1)]
 	}
 }

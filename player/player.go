@@ -24,7 +24,7 @@ type Player struct {
 	Gold         int
 	Lootable     bool
 	Connected    bool
-	Target       *common.NpcPlayer
+	Target       *common.Target
 	StatPoints   int
 	Class        Class
 	Stats        common.Stats
@@ -442,9 +442,9 @@ func (p *Player) AdjustHp(hp int) {
 //func (p *Player) IsInCombat() bool { return p.inCombat }
 //func (p *Player) SetCombat(c bool) { p.inCombat = c }
 
-func (p *Player) GetTarget() *common.NpcPlayer       { return p.Target }
-func (p *Player) SetTarget(target *common.NpcPlayer) { p.Target = target }
-func (p *Player) ResetTarget()                       { p.Target = nil }
+func (p *Player) GetTarget() *common.Target       { return p.Target }
+func (p *Player) SetTarget(target *common.Target) { p.Target = target }
+func (p *Player) ResetTarget()                    { p.Target = nil }
 
 func (p *Player) GetReputation() int     { return p.Stats.Reputation }
 func (p *Player) SetReputation(n int)    { p.Stats.Reputation = n }
