@@ -15,18 +15,28 @@ const TICK_OPERATION string = "tick"
 const QUEUE_OPERATION string = "queue"
 const ACTION_OPERATION string = "action"
 const NOTIFY_OPERATION string = "notify"
-const COMBAT_MOB_ATTACK_OPERATION string = "combat_mob_attack"
-const COMBAT_HIT_OPERATION string = "combat_hit"
-const COMBAT_KILL_OPERATION string = "combat_kill"
-const COMBAT_DIALOG_OPERATION string = "combat_dialog"
 const ALERT_OPERATION string = "alert"
 const EVENT_OPERATION string = "event"
 const CHAT_OPERATION string = "chat"
 const YELL_OPERATION string = "yell"
-const TARGET_MOB_OPERATION string = "target_mob"
-const TARGET_PLAYER_OPERATION string = "target_player"
-const PLAYER_UPDATE_OPERATION string = "player_update"
+
 const GET_PLAYER_OPERATION string = "get_player"
+const PLAYER_UPDATE_OPERATION string = "player_update"
+const PLAYER_SWING_OPERATION string = "player_swing"
+const PLAYER_HIT_OPERATION string = "player_hit"
+const PLAYER_MISS_OPERATION string = "player_miss"
+const PLAYER_DEAD_OPERATION string = "player_dead"
+const PLAYER_TARGET_DEAD_OPERATION string = "player_target_dead"
+const PLAYER_DIALOG_OPERATION string = "player_dialog"
+const PLAYER_TARGET_OPERATION string = "player_target"
+
+const NPC_TARGET_OPERATION string = "npc_target"
+const NPC_SWING_OPERATION string = "npc_swing"
+const NPC_HIT_OPERATION string = "npc_hit"
+const NPC_MISS_OPERATION string = "npc_miss"
+const NPC_DEAD_OPERATION string = "npc_dead"
+const NPC_TARGET_DEAD_OPERATION string = "npc_target_dead"
+const NPC_DIALOG_OPERATION string = "npc_dialog"
 
 const (
 	DISCONNECT serverCommands = iota
@@ -34,20 +44,28 @@ const (
 	ACK
 	TICK
 	QUEUE
-	COMBAT_MOB_ATTACK
-	COMBAT_HIT
-	COMBAT_KILL
-	COMBAT_DIALOG
 	ACTION
 	NOTIFY
 	CHAT
 	ALERT
 	EVENT
 	YELL
-	TARGET_MOB
-	TARGET_PLAYER
 	PLAYER_UPDATE
 	GET_PLAYER
+	PLAYER_SWING
+	PLAYER_HIT
+	PLAYER_MISS
+	PLAYER_DEAD
+	PLAYER_TARGET
+	PLAYER_TARGET_DEAD
+	PLAYER_DIALOG
+	NPC_TARGET
+	NPC_TARGET_DEAD
+	NPC_SWING
+	NPC_HIT
+	NPC_MISS
+	NPC_DEAD
+	NPC_DIALOG
 )
 
 // Server info
@@ -83,25 +101,33 @@ type ServerErr struct{ Err error }
 func (e ServerErr) Error() string { return e.Err.Error() }
 
 var ServerOperations = map[serverCommands]string{
-	DISCONNECT:        DISCONNECT_OPERATION,
-	CONNECT:           CONNECT_OPERATION,
-	ACK:               ACK_OPERATION,
-	TICK:              TICK_OPERATION,
-	QUEUE:             QUEUE_OPERATION,
-	COMBAT_MOB_ATTACK: COMBAT_MOB_ATTACK_OPERATION,
-	COMBAT_HIT:        COMBAT_HIT_OPERATION,
-	COMBAT_KILL:       COMBAT_KILL_OPERATION,
-	COMBAT_DIALOG:     COMBAT_DIALOG_OPERATION,
-	ACTION:            ACTION_OPERATION,
-	NOTIFY:            NOTIFY_OPERATION,
-	CHAT:              CHAT_OPERATION,
-	ALERT:             ALERT_OPERATION,
-	EVENT:             EVENT_OPERATION,
-	YELL:              YELL_OPERATION,
-	TARGET_MOB:        TARGET_MOB_OPERATION,
-	TARGET_PLAYER:     TARGET_PLAYER_OPERATION,
-	PLAYER_UPDATE:     PLAYER_UPDATE_OPERATION,
-	GET_PLAYER:        GET_PLAYER_OPERATION,
+	DISCONNECT:         DISCONNECT_OPERATION,
+	CONNECT:            CONNECT_OPERATION,
+	ACK:                ACK_OPERATION,
+	TICK:               TICK_OPERATION,
+	QUEUE:              QUEUE_OPERATION,
+	ACTION:             ACTION_OPERATION,
+	NOTIFY:             NOTIFY_OPERATION,
+	CHAT:               CHAT_OPERATION,
+	ALERT:              ALERT_OPERATION,
+	EVENT:              EVENT_OPERATION,
+	YELL:               YELL_OPERATION,
+	PLAYER_UPDATE:      PLAYER_UPDATE_OPERATION,
+	PLAYER_SWING:       PLAYER_SWING_OPERATION,
+	PLAYER_HIT:         PLAYER_HIT_OPERATION,
+	PLAYER_DEAD:        PLAYER_DEAD_OPERATION,
+	PLAYER_DIALOG:      PLAYER_DIALOG_OPERATION,
+	PLAYER_MISS:        PLAYER_MISS_OPERATION,
+	PLAYER_TARGET:      PLAYER_TARGET_OPERATION,
+	NPC_TARGET:         NPC_TARGET_OPERATION,
+	NPC_SWING:          NPC_SWING_OPERATION,
+	NPC_DIALOG:         NPC_DIALOG_OPERATION,
+	NPC_MISS:           NPC_MISS_OPERATION,
+	NPC_DEAD:           NPC_DEAD_OPERATION,
+	NPC_HIT:            NPC_HIT_OPERATION,
+	PLAYER_TARGET_DEAD: PLAYER_TARGET_DEAD_OPERATION,
+	NPC_TARGET_DEAD:    NPC_TARGET_DEAD_OPERATION,
+	GET_PLAYER:         GET_PLAYER_OPERATION,
 }
 
 func (s serverCommands) String() string {
@@ -118,20 +144,34 @@ func (s serverCommands) String() string {
 		return ServerOperations[QUEUE]
 	case ACTION:
 		return ServerOperations[ACTION]
-	case COMBAT_MOB_ATTACK:
-		return ServerOperations[COMBAT_MOB_ATTACK]
-	case COMBAT_HIT:
-		return ServerOperations[COMBAT_HIT]
-	case COMBAT_KILL:
-		return ServerOperations[COMBAT_KILL]
-	case COMBAT_DIALOG:
-		return ServerOperations[COMBAT_DIALOG]
-	case TARGET_MOB:
-		return ServerOperations[TARGET_MOB]
-	case TARGET_PLAYER:
-		return ServerOperations[TARGET_PLAYER]
 	case PLAYER_UPDATE:
 		return ServerOperations[PLAYER_UPDATE]
+	case PLAYER_DEAD:
+		return ServerOperations[PLAYER_DEAD]
+	case PLAYER_MISS:
+		return ServerOperations[PLAYER_MISS]
+	case PLAYER_HIT:
+		return ServerOperations[PLAYER_HIT]
+	case PLAYER_SWING:
+		return ServerOperations[PLAYER_SWING]
+	case PLAYER_DIALOG:
+		return ServerOperations[PLAYER_DIALOG]
+	case PLAYER_TARGET:
+		return ServerOperations[PLAYER_TARGET]
+	case PLAYER_TARGET_DEAD:
+		return ServerOperations[PLAYER_TARGET_DEAD]
+	case NPC_TARGET:
+		return ServerOperations[NPC_TARGET]
+	case NPC_SWING:
+		return ServerOperations[NPC_SWING]
+	case NPC_DIALOG:
+		return ServerOperations[NPC_DIALOG]
+	case NPC_MISS:
+		return ServerOperations[NPC_MISS]
+	case NPC_DEAD:
+		return ServerOperations[NPC_DEAD]
+	case NPC_TARGET_DEAD:
+		return ServerOperations[NPC_TARGET_DEAD]
 	case GET_PLAYER:
 		return ServerOperations[GET_PLAYER]
 	case NOTIFY:
